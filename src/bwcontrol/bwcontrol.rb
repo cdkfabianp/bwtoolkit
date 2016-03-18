@@ -4,7 +4,7 @@ require 'socket'
 require 'builder'
 require 'rexml/document'
 require 'json'
-require_relative '../bwhelpers/bwoci_config'
+require_relative 'bwoci_config'
 include REXML
 
 class BWControl < BWOci

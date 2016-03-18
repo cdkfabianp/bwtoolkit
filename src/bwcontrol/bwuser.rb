@@ -1,4 +1,4 @@
-require_relative 'bwcontrol/bwcontrol'
+require_relative 'bwcontrol'
 
 class BWUser < BWControl
 

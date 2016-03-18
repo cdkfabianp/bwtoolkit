@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 #
 STDOUT.sync = true
-require_relative 'src/bwsystem'
-require_relative 'src/userInput'
+require_relative 'src/bwcontrol/bwsystem'
+require_relative 'src/bwhelpers/userInput'
 require_relative 'src/bwhelpers/helpers'
 
 
