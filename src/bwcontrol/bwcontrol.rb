@@ -8,9 +8,11 @@ require_relative 'bwoci_config'
 include REXML
 
 class BWControl < BWOci
-    def initialize(server=nil,user=nil,pass=nil,debug=false,debug_oci=false,debug_time=false)
-        f = File.expand_path("../../../conf/bw_sys.conf",__FILE__)
-        c = get_app_config(f)
+    def initialize
+    end
+
+    def bw_login(config_data,server=nil,user=nil,pass=nil,debug=false,debug_oci=false,debug_time=false)
+        c = get_app_config(config_data)
         if server == nil
             server = c[:application_server]
             user = c[:my_bw_user]
@@ -26,6 +28,7 @@ class BWControl < BWOci
         @helpers = Helpers.new
         @session_id = get_session_id
         get_logged_in(user,pass)
+
     end
 
     def send_request(oci_cmd, config_hash)
@@ -122,7 +125,7 @@ class BWControl < BWOci
             end
             response_hash[name.to_sym] = value
 
-            #If response contained table elements add array of these elemetns into hash with key == <tableName>
+            #If response contained table elements add array of these elements into hash with key == <tableName>
             response_hash[table_name.to_sym] = table_array unless table_array.empty?
         end
         return response_hash
@@ -130,36 +133,64 @@ class BWControl < BWOci
     end
     #WARNING THE BELOW def is UGGGLY
     #Believe this now works for both nested and non-nested elements (at least up to two nest).  Need more testing to confirm
-    def oci_rows_to_nested_hash(response)
-        response_hash = @helpers.make_hoh
-        parse_response = REXML::Document.new(response)
-        response_hash = Hash.new
-        parse_response.elements['//command'].each do |ele|
-            name = ele.name
-            if parse_response.elements['//'+name+'/'].text == nil
-                sub_hash = Hash.new
-                parse_response.elements['//'+name+'/'].each do |sub_ele|
-                    sub_name = sub_ele.name
-                    if parse_response.elements['//'+sub_name+'/'].text == nil
-                        response_hash[sub_name.to_sym]= Hash.new
-                        parse_response.elements['//'+sub_name+'/'].each do |sub_ele2|
-                            sub_name2 = sub_ele2.name
-                            response_hash[sub_name.to_sym][sub_name2.to_sym] = parse_response.elements['//'+sub_name+'/'+sub_name2].text
-                        end
-                    else
-                        sub_hash[sub_name.to_sym] = parse_response.elements['//'+name+'/'+sub_name].text
-                        response_hash[name.to_sym] = sub_hash
-                    end
-                end
+    # This has been replaced with oci_build_nested_rows_hash
+    # def old_oci_rows_to_nested_hash(response)
+    #     # response_hash = @helpers.make_hoh
+    #     response_hash = Hash.new(Hash.new)
+    #     parse_response = REXML::Document.new(response)
+    #     response_hash = Hash.new
+    #     parse_response.elements['//command'].each do |ele|
+    #         name = ele.name
+    #         if parse_response.elements['//'+name+'/'].text == nil
+    #             sub_hash = Hash.new
+    #             parse_response.elements['//'+name+'/'].each do |sub_ele|
+    #                 sub_name = sub_ele.name
+    #                 if parse_response.elements['//'+sub_name+'/'].text == nil
+    #                     response_hash[sub_name.to_sym]= Hash.new
+    #                     parse_response.elements['//'+sub_name+'/'].each do |sub_ele2|
+    #                         sub_name2 = sub_ele2.name
+    #                         response_hash[sub_name.to_sym][sub_name2.to_sym] = parse_response.elements['//'+sub_name+'/'+sub_name2].text
+    #                     end
+    #                 else
+    #                     sub_hash[sub_name.to_sym] = parse_response.elements['//'+name+'/'+sub_name].text
+    #                     response_hash[name.to_sym] = sub_hash
+    #                 end
+    #             end
 
+    #         else
+    #             value = parse_response.elements['//'+name].text
+    #             response_hash[name.to_sym] = value
+
+    #         end
+    #     end
+    #     return response_hash
+
+    # end
+
+    def oci_build_nested_rows_hash(response)
+        response_hash = Hash.new(Hash.new)
+        array_of_hashes = Array.new
+        ele_name = 'command' 
+        parse_response = REXML::Document.new(response)
+        response_hash = oci_rows_to_nested_hash(parse_response,ele_name,response_hash)
+
+        return response_hash
+    end
+
+    def oci_rows_to_nested_hash(parse_response,name,hash_key=nil)
+        response_hash = Hash.new
+        parse_response.elements['//'+name+'/'].each do |ele|
+            name = ele.name             
+            if parse_response.elements['//'+name+'/'].text == nil
+                hash_key = name.to_sym
+                response_hash[hash_key] = oci_rows_to_nested_hash(ele,name)
             else
                 value = parse_response.elements['//'+name].text
                 response_hash[name.to_sym] = value
-
             end
         end
-        return response_hash
 
+        return response_hash
     end
 
     #If Response is a table return array of hashes
@@ -200,7 +231,6 @@ class BWControl < BWOci
             end
             list_of_responses << final_response
         end
-
         return list_of_responses
     end
 
@@ -247,7 +277,7 @@ class BWControl < BWOci
         oci_cmd = args.shift
         response,cmd_ok = send_request(oci_cmd,*args)
         if cmd_ok == true
-            response_hash = oci_rows_to_nested_hash(response)
+            response_hash = oci_build_nested_rows_hash(response)
         else
             puts "-->#{response}" if @debug == true
         end
@@ -264,7 +294,10 @@ class BWControl < BWOci
     end
 
     def get_app_config(file_name)
-        c = JSON.parse(File.read(file_name), :symbolize_names => true)
+        json_data = nil
+        File.exist?(file_name) ? json_data = File.read(file_name) : json_data =  file_name
+
+        return JSON.parse(json_data, :symbolize_names => true)
     end    
 
     def login(user,pass)

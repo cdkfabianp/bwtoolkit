@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
+gem "minitest"
 gem 'json'
-gem 'digest/sha1'
-gem 'digest/md5'
-gem 'socket'
+gem 'digest'
+# gem 'socket'
 gem 'builder'
-gem 'rexml/document'
+# gem 'rexml'

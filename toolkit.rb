@@ -88,7 +88,8 @@ end
 # Initialize Global Variables
 $options = (UserInput.new.getOpts)
 $helper = Helpers.new
-$bw = BWSystem.new()
+$bw = BWSystem.new
+$bw.bw_login(File.expand_path("../conf/bw_sys.conf",__FILE__))
 
 # Get Enterprise if not provided by User BUT group is specified
 if $options.has_key?(:group)

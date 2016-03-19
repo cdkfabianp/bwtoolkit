@@ -27,7 +27,7 @@ class UserInput
 
               Valid Commands:
                 find_tn:        Search system for TN and return configured Enterprise/Group/User/Activation status
-                tn_search:      List all TNs assigned to group
+                tn_list:        List all TNs assigned to group
                 reg_stats:      Find all active devices in group based on registrations status and users assigend to device
                 config_ucone:   Configure specified users for UCOne
                 audit_rec:      Find all users assigned receptionist users and whether they are monitoring any users
