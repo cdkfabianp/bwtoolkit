@@ -46,6 +46,33 @@ class BWControl < BWOci
         return response,cmd_ok
     end
 
+    # Create XML 
+    def build_request(oci_cmd,config_hash)
+        xml = Builder::XmlMarkup.new( :indent => 2)
+        xml.instruct! :xml, :encoding => "ISO-8859-1"
+        xml.BroadsoftDocument :protocol => "OCI", :xmlns => "C", :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance" do |a|
+            a.sessionId(@session_id , :xmlns => "")
+            a.command :'xsi:type' => "#{oci_cmd}" , :xmlns => "" do |b|
+                b = build_xml(b,config_hash)
+            end
+        end
+    end
+
+    def build_xml(x,hash)
+        hash.each do |key,val|
+            if val.is_a?(Hash)
+                x.tag! key do |y|
+                    build_xml(y,val)
+                end
+            elsif val.is_a?(Array)
+                val.each {|ele| x.tag! key,ele}
+            else
+                x.tag! key,val
+            end
+        end
+        return x
+    end     
+
     def get_response
         response = ""
         while line = @tcp_client.gets
@@ -76,17 +103,17 @@ class BWControl < BWOci
         puts "==============="
     end
 
-    def openTcpSocket(server)
-        begin
-            @tcp_client = TCPSocket.new( server, 2208)
-        rescue
-            puts "Unable to connect to server: #{server}"
-            exit
-        end
-    end
+    def get_list_response(*args)
+        response_list = Array.new
+        oci_cmd = args.shift
+        ele_name = args.shift
 
-    def closeTcpSocket(tcp_client)
-        @tcp_client.close
+        response,cmd_ok = send_request(oci_cmd,*args)
+        if cmd_ok == true
+            response_list = oci_list_to_array(response,ele_name)
+        end
+
+        return response_list,cmd_ok
     end
 
     #If Response is a list (same element name with different values)
@@ -108,89 +135,17 @@ class BWControl < BWOci
         return response_array
     end
 
-    #If Response is a collection of unique attributes, this will return a hash of <attribute>: <value>
-    def oci_rows_to_hash(response)
-        response_hash = Hash.new
-        table_array = Array.new
-        table_name = ""
-        parse_response = REXML::Document.new(response)
-
-        response_hash = Hash.new
-        parse_response.elements["//command/"].each do |ele|
-            name = ele.name
-            value = parse_response.elements['//'+name].text
-            if name =~ /\w+Table/
-                table_array =  oci_table_to_array(response,name)
-                table_name = name
-            end
-            response_hash[name.to_sym] = value
-
-            #If response contained table elements add array of these elements into hash with key == <tableName>
-            response_hash[table_name.to_sym] = table_array unless table_array.empty?
+    def get_table_response(*args)
+        list_of_response = Array.new
+        oci_cmd = args.shift
+        table_header = args.shift
+        response,cmd_ok = send_request(oci_cmd,*args)
+        if cmd_ok == true
+            list_of_responses = oci_table_to_array(response,table_header)
+        else
+            puts "-->#{response}" if @debug == true
         end
-        return response_hash
-
-    end
-    #WARNING THE BELOW def is UGGGLY
-    #Believe this now works for both nested and non-nested elements (at least up to two nest).  Need more testing to confirm
-    # This has been replaced with oci_build_nested_rows_hash
-    # def old_oci_rows_to_nested_hash(response)
-    #     # response_hash = @helpers.make_hoh
-    #     response_hash = Hash.new(Hash.new)
-    #     parse_response = REXML::Document.new(response)
-    #     response_hash = Hash.new
-    #     parse_response.elements['//command'].each do |ele|
-    #         name = ele.name
-    #         if parse_response.elements['//'+name+'/'].text == nil
-    #             sub_hash = Hash.new
-    #             parse_response.elements['//'+name+'/'].each do |sub_ele|
-    #                 sub_name = sub_ele.name
-    #                 if parse_response.elements['//'+sub_name+'/'].text == nil
-    #                     response_hash[sub_name.to_sym]= Hash.new
-    #                     parse_response.elements['//'+sub_name+'/'].each do |sub_ele2|
-    #                         sub_name2 = sub_ele2.name
-    #                         response_hash[sub_name.to_sym][sub_name2.to_sym] = parse_response.elements['//'+sub_name+'/'+sub_name2].text
-    #                     end
-    #                 else
-    #                     sub_hash[sub_name.to_sym] = parse_response.elements['//'+name+'/'+sub_name].text
-    #                     response_hash[name.to_sym] = sub_hash
-    #                 end
-    #             end
-
-    #         else
-    #             value = parse_response.elements['//'+name].text
-    #             response_hash[name.to_sym] = value
-
-    #         end
-    #     end
-    #     return response_hash
-
-    # end
-
-    def oci_build_nested_rows_hash(response)
-        response_hash = Hash.new(Hash.new)
-        array_of_hashes = Array.new
-        ele_name = 'command' 
-        parse_response = REXML::Document.new(response)
-        response_hash = oci_rows_to_nested_hash(parse_response,ele_name,response_hash)
-
-        return response_hash
-    end
-
-    def oci_rows_to_nested_hash(parse_response,name,hash_key=nil)
-        response_hash = Hash.new
-        parse_response.elements['//'+name+'/'].each do |ele|
-            name = ele.name             
-            if parse_response.elements['//'+name+'/'].text == nil
-                hash_key = name.to_sym
-                response_hash[hash_key] = oci_rows_to_nested_hash(ele,name)
-            else
-                value = parse_response.elements['//'+name].text
-                response_hash[name.to_sym] = value
-            end
-        end
-
-        return response_hash
+        return list_of_responses,cmd_ok
     end
 
     #If Response is a table return array of hashes
@@ -201,7 +156,7 @@ class BWControl < BWOci
 
         ##Get Column Headings
         parse_response = REXML::Document.new(response)
-        parse_response.elements.each("//command/#{table_header}/colHeading") do |ele|
+        parse_response.elements.each("//command/#{table_header}/colHeading") do |ele|            
             parse_line = REXML::Document.new("#{ele}")
             n = parse_line.elements["//colHeading"].text
             name = n.to_s
@@ -231,33 +186,8 @@ class BWControl < BWOci
             end
             list_of_responses << final_response
         end
+
         return list_of_responses
-    end
-
-    def get_list_response(*args)
-        response_list = Array.new
-        oci_cmd = args.shift
-        ele_name = args.shift
-
-        response,cmd_ok = send_request(oci_cmd,*args)
-        if cmd_ok == true
-            response_list = oci_list_to_array(response,ele_name)
-        end
-
-        return response_list,cmd_ok
-    end
-
-    def get_table_response(*args)
-        list_of_response = Array.new
-        oci_cmd = args.shift
-        table_header = args.shift
-        response,cmd_ok = send_request(oci_cmd,*args)
-        if cmd_ok == true
-            list_of_responses = oci_table_to_array(response,table_header)
-        else
-            puts "-->#{response}" if @debug == true
-        end
-        return list_of_responses,cmd_ok
     end
 
     def get_rows_response(*args)
@@ -272,6 +202,30 @@ class BWControl < BWOci
         return response_hash,cmd_ok
     end
 
+    #If Response is a collection of unique attributes, this will return a hash of <attribute>: <value>
+    def oci_rows_to_hash(response)
+        response_hash = Hash.new
+        table_array = Array.new
+        table_name = ""
+        parse_response = REXML::Document.new(response)
+
+        response_hash = Hash.new
+        parse_response.elements["//command/"].each do |ele|
+            name = ele.name
+            value = parse_response.elements['//'+name].text
+            if name =~ /\w+Table/
+                table_array =  oci_table_to_array(response,name)
+                table_name = name
+            end
+            response_hash[name.to_sym] = value
+
+            #If response contained table elements add array of these elements into hash with key == <tableName>
+            response_hash[table_name.to_sym] = table_array unless table_array.empty?
+        end
+        return response_hash
+
+    end
+
     def get_nested_rows_response(*args)
         response_hash = Hash.new
         oci_cmd = args.shift
@@ -283,6 +237,32 @@ class BWControl < BWOci
         end
         
         return response_hash,cmd_ok
+    end
+
+    def oci_build_nested_rows_hash(response)
+        response_hash = Hash.new(Hash.new)
+        array_of_hashes = Array.new
+        ele_name = 'command' 
+        parse_response = REXML::Document.new(response)
+        response_hash = oci_rows_to_nested_hash(parse_response,ele_name,response_hash)
+
+        return response_hash
+    end
+
+    def oci_rows_to_nested_hash(parse_response,name,hash_key=nil)
+        response_hash = Hash.new
+        parse_response.elements['//'+name+'/'].each do |ele|
+            name = ele.name             
+            if parse_response.elements['//'+name+'/'].text == nil
+                hash_key = name.to_sym
+                response_hash[hash_key] = oci_rows_to_nested_hash(ele,name)
+            else
+                value = parse_response.elements['//'+name].text
+                response_hash[name.to_sym] = value
+            end
+        end
+
+        return response_hash
     end
 
     # Get Logged in
@@ -335,32 +315,17 @@ class BWControl < BWOci
         session_id = "localhost,1535442458,1393632344857"
     end
 
-	# Create XML 
-	def build_request(oci_cmd,config_hash)
-		xml = Builder::XmlMarkup.new( :indent => 2)
-		xml.instruct! :xml, :encoding => "ISO-8859-1"
-	 	xml.BroadsoftDocument :protocol => "OCI", :xmlns => "C", :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance" do |a|
-	 		a.sessionId(@session_id , :xmlns => "")
-	 		a.command :'xsi:type' => "#{oci_cmd}" , :xmlns => "" do |b|
-	 		    b = build_xml(b,config_hash)
-            end
-	 	end
-	end
+    def openTcpSocket(server)
+        begin
+            @tcp_client = TCPSocket.new( server, 2208)
+        rescue
+            puts "Unable to connect to server: #{server}"
+            exit
+        end
+    end
 
-	def build_xml(x,hash)
-		hash.each do |key,val|
-			if val.is_a?(Hash)
-				x.tag! key do |y|
-					build_xml(y,val)
-				end
-            elsif val.is_a?(Array)
-                val.each {|ele| x.tag! key,ele}
-			else
-		 		x.tag! key,val
-		 	end
-		end
-		return x
-	end				
-
+    def closeTcpSocket(tcp_client)
+        @tcp_client.close
+    end
 
 end

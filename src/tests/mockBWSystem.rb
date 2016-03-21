@@ -1,0 +1,3 @@
+class MockBWSystem
+
+end

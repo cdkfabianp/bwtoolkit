@@ -87,7 +87,7 @@ class BWOci
 			serviceProviderId: nil,
 			groupId: nil,       		
             deviceName: nil,
-            responseSizeLimit: 1000
+            responseSizeLimit: 5000
     	} 
     end
 
@@ -115,6 +115,13 @@ class BWOci
 			groupId: nil,
 			responseSizeLimit: 1000
 		}
+	end
+
+	def GroupGetListInServiceProviderRequest
+		config_hash = {
+			serviceProviderId: nil
+		}
+		return config_hash
 	end
 
 	def GroupGetListInSystemRequest
@@ -199,6 +206,12 @@ class BWOci
 		config_hash = {
 			serviceProviderId: nil,
 			GroupId: nil,
+		}
+	end
+
+	def UserGetRegistrationListRequest(user=nil)
+		config_hash = {
+			userId: user
 		}
 	end
 

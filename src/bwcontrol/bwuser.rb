@@ -12,6 +12,15 @@ class BWUser < BWControl
 		return cmd_ok,response_hash
 	end
 
+    def get_users_assigned_to_device(ent,group,dev_name)
+        cmd_ok = false
+        user_ids = Array.new
+        cmd_ok,user_config = get_group_device_users(ent,group,dev_name)
+
+        user_config.each { |usr_info| user_ids << usr_info[:User_Id] }
+        return cmd_ok, user_ids
+    end
+
     def get_user_filtered_info(user,filter=nil)
     	oci_call=:UserGetRequest20
         response_hash,cmd_ok = get_nested_rows_response(oci_call,{userId: user})
@@ -137,6 +146,17 @@ class BWUser < BWControl
 
 	 	return cmd_ok,response
 	end
+
+    def get_user_register_status(user=nil)
+        oci_cmd = :UserGetRegistrationListRequest
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        table_header = 'registrationTable'
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
 
 	def mod_user_sca_ep(user=nil,device=nil,lineport=nil)
 		oci_cmd = :UserSharedCallAppearanceAddEndpointRequest14sp2

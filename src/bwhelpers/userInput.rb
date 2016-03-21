@@ -7,7 +7,6 @@ class UserInput
         usage() if ARGV.empty?
 
         options[:cmd] = ARGV.shift.to_sym  unless ARGV.empty?
-        
 
         opt_parser = OptionParser.new do |opts|
             ARGV << '-h' if ARGV.empty?
@@ -32,6 +31,7 @@ class UserInput
                 config_ucone:   Configure specified users for UCOne
                 audit_rec:      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:     Find all active audio files in Announcement Repository
+                get_poly_list:  Find all Active Polycom Device Types in System 
         "
         abort
     end
@@ -63,6 +63,13 @@ class UserInput
     def find_tn(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-t TELEPHONE_NUMBER]"
         opts.on("-t", "--telephone_num TN", "Specifiy single Telephone Number or File containing list of TNs.") { |v| options[:tn] = v }
+        return opts,options
+    end
+
+    def get_poly_list(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-a", "--all ALL", "Get list of all 501s/601s for all enterprises") { |v| options[:all_poly] = v}
+        opts.on("-s", "--sum SUMMARY", "Print Summary of Counts (total configed / total reg) if true, Otherwise print Registration info for all registered devices") { |v| options[:counts] = v}
         return opts,options
     end
 

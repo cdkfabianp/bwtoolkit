@@ -82,8 +82,19 @@ def audit_rec
 
 end
 
+# def get_501_list
+# 	require_relative 'src/getRegistrationByDeviceType'
+# 	z = GetRegByDeviceType.new($options[:all_poly])
+# 	z.get_poly_list
 
+# end
 
+def get_poly_list
+	require_relative 'src/getRegistrationByDeviceType'
+	z = GetRegByDeviceType.new($options[:all_poly],$options[:counts])
+	z.get_poly_list
+
+end
 
 # Initialize Global Variables
 $options = (UserInput.new.getOpts)
