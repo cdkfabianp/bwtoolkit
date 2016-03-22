@@ -33,6 +33,28 @@ class BWEnt < BWGroup
         return ent
     end
 
+    def get_ent_service_list(ent=nil,search_criteria=nil,value=nil)
+        oci_cmd = :UserGetServiceInstanceListInServiceProviderRequest
+        sc = search_criteria.to_sym if search_criteria != nil
+        config_hash = UserGetServiceInstanceListInServiceProviderRequest(ent,sc,value)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = 'serviceInstanceTable'
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def get_service_users_in_ent(ent)
+        cmd_ok,response_hash = get_ent_service_list(ent)
+
+        users = Array.new
+        response_hash.each { |user_info| users.push(user_info[:User_ID]) }
+
+        return cmd_ok,users
+
+    end
+
     def get_sys_callp_clid_settings(ent)
     	oci_cmd = :ServiceProviderCallProcessingGetPolicyRequest17sp4
     	config_hash = ServiceProviderCallProcessingGetPolicyRequest17sp4()
@@ -47,4 +69,6 @@ class BWEnt < BWGroup
         }      
         return cmd_ok,spCppCLIDSettings
     end
+
+
 end

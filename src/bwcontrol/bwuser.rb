@@ -51,6 +51,17 @@ class BWUser < BWControl
         return cmd_ok,users
     end    
 
+    def get_service_users_in_group(ent,group)
+        cmd_ok,response_hash = get_ent_service_list(ent)
+
+        users = Array.new
+        response_hash.each { |user_info| users.push(user_info[:User_ID]) if user_info[:Group_ID] == group}
+
+        return cmd_ok,users
+
+    end
+        
+
     def get_user_svc_list(user=nil)
     	oci_cmd = :UserServiceGetAssignmentListRequest
     	config_hash = send(oci_cmd,user)

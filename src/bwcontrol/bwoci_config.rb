@@ -1,4 +1,6 @@
-class BWOci
+require_relative 'bwoci_config_components'
+
+class BWOci < OCIComponents
 
 	def AuthenticationRequest
 		config_hash = {
@@ -219,6 +221,15 @@ class BWOci
 		config_hash = {
 			userId: user
 		}
+	end
+
+	def UserGetServiceInstanceListInServiceProviderRequest(ent=nil,search_criteria=nil,value=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			responseSizeLimit: 1000,
+		}
+		config_hash[search_criteria] = send(search_criteria,value) unless search_criteria == nil
+		return config_hash
 	end
 
 	def UserIntegratedIMPModifyRequest(user=nil,active=nil)
