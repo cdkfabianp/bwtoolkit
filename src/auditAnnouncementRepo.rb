@@ -10,11 +10,14 @@ class AuditAnnouncementRepo
 		cmd_ok,users = $bw.get_users_in_group(ent,group)
 		print_output(ent,group,get_user_announcement_list(users),"users")
 
+		#Check all AutoAttendants and Hunt Groups for files with name that contains backslashes "\"
+		cmd_ok,virtual_users = $bw.get_service_users_in_group(ent,group)
+		print_output(ent,group,get_user_announcement_list(virtual_users),"AAs / HGs")
 		
 	end
 
 	def print_output(ent,group,file_names,entity)
-		if file_names != nil #&& file_names.length > 0
+		if file_names != nil && file_names.length > 0
 			puts "Need to update files for #{entity}"			
 			file_names.each do |user_info|
 				if user_info.is_a?(String)
