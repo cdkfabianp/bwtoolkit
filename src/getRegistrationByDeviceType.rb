@@ -24,7 +24,7 @@ class GetRegByDeviceType
 	end
 
 	def print_poly_reg_counts(ent,group,configed_devices,reged_devices)
-		puts "#{ent},#{group},#{configed_devices},#{reged_devices}"		
+		puts "#{ent},#{group},#{configed_devices},#{reged_devices}"	 if configed_devices > 0
 	end
 
 	def print_poly_reg_list(ent,group,ua_device_list)
