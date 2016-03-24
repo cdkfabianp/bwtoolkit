@@ -29,6 +29,12 @@ def config_ucone
 	uc1.config_ucone_users
 end
 
+def find_ent_group
+	require_relative 'src/findMatchingGroupsAndEnts'
+	s = FindEntGroups.new($options[:search_string])
+	s.find_all_matches
+end
+
 # Find TN in system
 def find_tn
 	require_relative 'src/tn_search'
