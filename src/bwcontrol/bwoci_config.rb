@@ -128,9 +128,9 @@ class BWOci < OCIComponents
 		}
 	end
 
-	def GroupGetListInServiceProviderRequest
+	def GroupGetListInServiceProviderRequest(ent=nil)
 		config_hash = {
-			serviceProviderId: nil
+			serviceProviderId: ent
 		}
 		return config_hash
 	end
