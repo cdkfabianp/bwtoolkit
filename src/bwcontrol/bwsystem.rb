@@ -50,15 +50,26 @@ class BWSystem < BWEnt
     end
 
     def get_groups_in_system
+        oci_cmd = :GroupGetListInSystemRequest
+        config_hash = send(oci_cmd)
+        config_hash = {} #Empty config hash as we want to pass no search criteria
         ent_groups = Hash.new(Array.new)
-        cmd_ok,ents = get_ents
 
-        ents.each do |ent|
-            cmd_ok,groups = get_groups(ent)
-            ent_groups[ent] = groups
-        end
+        #Get all Enterprises (In case enterprise does not have any groups associated with it)
+        cmd_ok,ents = get_ents
+        ents.each {|ent| ent_groups[ent] = []}
+
+        #Populate groups with Enterprises
+        table_header = "groupTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        response_hash.each do |group_hash|
+            if ent_groups.has_key?(group_hash[:Organization_Id])
+                ent_groups[group_hash[:Organization_Id]].push(group_hash[:Group_Id])
+            else
+                ent_groups[group_hash[:Organization_Id]] = [group_hash[:Group_Id]]
+            end
+        end     
         return ent_groups
     end
-
 
 end
