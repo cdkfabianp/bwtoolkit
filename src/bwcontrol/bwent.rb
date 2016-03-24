@@ -2,11 +2,12 @@ require_relative 'bwgroup'
 
 class BWEnt < BWGroup
     def get_ents
+        oci_cmd = :ServiceProviderGetListRequest
         ents = Array.new
-        config_hash = {isEnterprise: true}
+        config_hash = send(oci_cmd)
+
         table_header = "serviceProviderTable"
-    
-        table_of_ents,cmd_ok = get_table_response(:ServiceProviderGetListRequest,table_header,config_hash)
+        table_of_ents,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
         table_of_ents.each { |ent_hash| ents << ent_hash[:Service_Provider_Id] }
 
         return cmd_ok,ents
