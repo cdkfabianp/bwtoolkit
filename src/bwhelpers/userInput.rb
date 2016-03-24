@@ -68,8 +68,9 @@ class UserInput
 
     def get_poly_list(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
-        opts.on("-a", "--all ALL", "Get list of all 501s/601s for all enterprises") { |v| options[:all_poly] = v}
-        opts.on("-s", "--sum SUMMARY", "Print Summary of Counts (total configed / total reg) if true, Otherwise print Registration info for all registered devices") { |v| options[:counts] = v}
+        opts.on("-a", "--all", "[true|false] Get a list of all Polycom Devices or just 501/601s") { |v| options[:all_poly] = v}
+        opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}      
+        opts.on("-s", "--sum", "[true|false] Print Summary of Counts (total configed / total reg) if true, Otherwise print Registration info for all registered devices") { |v| options[:counts] = v}
         return opts,options
     end
 
