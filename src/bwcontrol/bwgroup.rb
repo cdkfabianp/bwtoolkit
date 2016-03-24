@@ -3,10 +3,8 @@ class BWGroup < BWUser
 
     def get_groups(ent=nil)
         oci_cmd = :GroupGetListInServiceProviderRequest
-        config_hash = send(oci_cmd)
-        config_hash[:serviceProviderId] = ent
-        config_hash = {} if ent == nil #Empty hash if no search options
-        # abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+        config_hash = send(oci_cmd,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
 
         groups = Array.new
         table_header = "groupTable"
@@ -15,17 +13,6 @@ class BWGroup < BWUser
 
         return cmd_ok,groups
     end
-
-    # def get_groups_in_system
-    #     oci_cmd = :GroupGetListInSystemRequest
-    #     config_hash = send(oci_cmd)
-    #     config_hash = {} #Empty config hash as we want to pass no search criteria
-
-    #     groups = Array.new
-    #     table_header = "groupTable"
-    #     response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
-    #     response_hash.each { |group_hash| groups << group_hash[:Group_Id] }        
-    # end
 
     def get_group_annoucement_list(ent=nil,group=nil)
         oci_cmd = :GroupAnnouncementFileGetListRequest
