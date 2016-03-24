@@ -82,16 +82,14 @@ def audit_rec
 
 end
 
-# def get_501_list
-# 	require_relative 'src/getRegistrationByDeviceType'
-# 	z = GetRegByDeviceType.new($options[:all_poly])
-# 	z.get_poly_list
-
-# end
-
 def get_poly_list
 	require_relative 'src/getRegistrationByDeviceType'
-	z = GetRegByDeviceType.new($options[:all_poly],$options[:counts])
+	z = nil
+	if $options.has_key?(:ent)
+		z = GetRegByDeviceType.new($options[:all_poly],$options[:counts],$options[:ent],$options[:group])
+	else
+		z = GetRegByDeviceType.new($options[:all_poly],$options[:counts])
+	end
 	z.get_poly_list
 
 end
@@ -109,6 +107,9 @@ if $options.has_key?(:group)
 		puts "Could not find group: #{$options[:group]} in system"
 		abort
 	end
+else
+	$options[:ent] = nil
+	$options[:group] = nil
 end
 
 # Send to specific method to process command
