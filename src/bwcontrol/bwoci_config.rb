@@ -84,6 +84,15 @@ class BWOci < OCIComponents
 	    return config_hash
     end
 
+    def GroupAccessDeviceGetRequest18sp1(ent=nil,group=nil,dev_name=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,
+    		deviceName: dev_name
+    	}
+    	return config_hash
+    end
+
     def GroupAccessDeviceGetUserListRequest
     	config_hash = {
 			serviceProviderId: nil,
@@ -140,6 +149,12 @@ class BWOci < OCIComponents
 	def ServiceProviderCallProcessingGetPolicyRequest17sp4
 		config_hash = {
 			serviceProviderId: ent
+		}
+	end
+
+	def ServiceProviderGetListRequest
+		config_hash = {
+			isEnterprise: true
 		}
 	end
 
