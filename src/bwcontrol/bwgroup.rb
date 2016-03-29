@@ -93,8 +93,16 @@ class BWGroup < BWUser
             end
         end
 
-
         return cmd_ok,expanded_tn_list
+    end
+
+    def get_group_profile(ent=nil,group=nil)
+        oci_cmd = :GroupGetRequest14sp7
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil        
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+        return cmd_ok,response_hash
     end
 
     def mod_add_group_device(dev_hash,dev_mgmt_creds=nil)

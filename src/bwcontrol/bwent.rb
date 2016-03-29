@@ -34,6 +34,16 @@ class BWEnt < BWGroup
         return ent
     end
 
+    def get_ent_profile(ent=nil)
+        oci_cmd = :ServiceProviderGetRequest17sp1
+        config_hash = send(oci_cmd,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
     def get_ent_service_list(ent=nil,search_criteria=nil,value=nil)
         oci_cmd = :UserGetServiceInstanceListInServiceProviderRequest
         sc = search_criteria.to_sym if search_criteria != nil

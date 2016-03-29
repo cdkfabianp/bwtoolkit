@@ -146,6 +146,13 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def GroupGetRequest14sp7(ent,group)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,			
+		}
+	end
+
 	def ServiceProviderCallProcessingGetPolicyRequest17sp4
 		config_hash = {
 			serviceProviderId: ent
@@ -156,6 +163,13 @@ class BWOci < OCIComponents
 		config_hash = {
 			isEnterprise: true
 		}
+	end
+
+	def ServiceProviderGetRequest17sp1(ent=nil)
+		config_hash = {
+			serviceProviderId: ent
+		}
+
 	end
 
 	def SystemDnGetUtilizationRequest14sp3
