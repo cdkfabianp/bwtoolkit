@@ -9,7 +9,7 @@ class BwDeviceAudit
 
     def get_reg_info(config_hash)
         #Query devices in group
-        cmd_ok,devices_list = $bw.get_group_device_list(config_hash)
+        cmd_ok,devices_list = $bw.get_group_device_list(@ent,@group)
 
         ua_device_list = $helper.make_hoh
         devices_list.each do |device_list|
