@@ -25,14 +25,15 @@ class UserInput
             Usage: #{$PROGRAM_NAME} [COMMAND] [OPTIONS]
 
               Valid Commands:
-                find_ent_group:     Search for all entIds and groupIds that match string value              
-                find_tn:            Search system for TN and return configured Enterprise/Group/User/Activation status
-                tn_list:            List all TNs assigned to group
-                reg_stats:          Find all active devices in group based on registrations status and users assigend to device
-                config_ucone:       Configure specified users for UCOne
-                audit_rec:          Find all users assigned receptionist users and whether they are monitoring any users
-                audio_repo:         Find all active audio files in Announcement Repository
-                get_poly_list:      Find all Active Polycom Device Types in System 
+                find_ent_group:             Search for all entIds and groupIds that match string value              
+                find_tn:                    Search system for TN and return configured Enterprise/Group/User/Activation status
+                tn_list:                    List all TNs assigned to group
+                reg_stats:                  Find all active devices in group based on registrations status and users assigend to device
+                config_ucone:               Configure specified users for UCOne
+                audit_rec:                  Find all users assigned receptionist users and whether they are monitoring any users
+                audio_repo:                 Find all active audio files in Announcement Repository
+                get_poly_list:              Find all Active Polycom Device Types in System 
+                get_user_list_w_alt_nums:   Print list of all users in group including first two alternate numbers assigned
         "
         abort
     end
@@ -98,5 +99,12 @@ class UserInput
         opts.on("-g", "--group GROUP", "Specify group to retrieve TN List from") {|v| options[:group] = v}
         return opts,options
     end
+
+    def get_user_list_w_alt_nums(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}              
+        return opts,options
+    end
+
 
 end

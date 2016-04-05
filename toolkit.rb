@@ -100,6 +100,13 @@ def get_poly_list
 
 end
 
+def get_user_list_w_alt_nums
+	require_relative 'src/getUserAltInfo'
+	a = GetAltNumberInfo.new($options[:ent],$options[:group])
+	a.get_users_and_alt_nums
+end
+
+
 # Initialize Global Variables
 $options = (UserInput.new.getOpts)
 $helper = Helpers.new

@@ -2,6 +2,17 @@ require_relative 'bwcontrol'
 
 class BWUser < BWControl
 
+    def get_user_alternate_numbers(user=nil)
+        oci_cmd = :UserAlternateNumbersGetRequest17
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        table_header = 'userServicesAssignmentTable'
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash        
+    end
+
 	def get_user_announcement_list(user=nil)
 		oci_cmd = :UserAnnouncementFileGetListRequest
 		config_hash = send(oci_cmd)

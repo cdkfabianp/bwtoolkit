@@ -178,6 +178,12 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def UserAlternateNumbersGetRequest17(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
 	def UserAnnouncementFileGetListRequest
 		config_hash = {
 			userId: nil,
