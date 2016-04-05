@@ -242,7 +242,7 @@ class BWControl < BWOci
     def oci_build_nested_rows_hash(response)
         response_hash = Hash.new(Hash.new)
         array_of_hashes = Array.new
-        ele_name = 'command' 
+        ele_name = '//command' 
         parse_response = REXML::Document.new(response)
         response_hash = oci_rows_to_nested_hash(parse_response,ele_name,response_hash)
 
@@ -252,16 +252,17 @@ class BWControl < BWOci
     def oci_rows_to_nested_hash(parse_response,name,hash_key=nil)
         response_hash = Hash.new
         parse_response.elements['//'+name+'/'].each do |ele|
-            name = ele.name             
-            if parse_response.elements['//'+name+'/'].text == nil
-                hash_key = name.to_sym
-                response_hash[hash_key] = oci_rows_to_nested_hash(ele,name)
+            rel_name = ele.name 
+            if parse_response.elements['//'+rel_name+'/'].text == nil
+                hash_key = rel_name.to_sym
+                abs_path = "#{name}/#{rel_name}"
+                response_hash[hash_key] = oci_rows_to_nested_hash(ele,abs_path)
             else
-                value = parse_response.elements['//'+name].text
-                response_hash[name.to_sym] = value
+                abs_path = '//'+name+'/'+rel_name
+                value = parse_response.elements[abs_path].text
+                response_hash[rel_name.to_sym] = value
             end
         end
-
         return response_hash
     end
 
