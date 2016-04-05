@@ -90,6 +90,11 @@ class TestBWControl < Minitest::Test
 		response_hash = @bw.oci_build_nested_rows_hash(test_response)
 		assert_kind_of(Hash,response_hash,"#{__method__}: Did not return Hash")
 		assert_equal response_hash,expected_response,"Returned Hash did not match expected Hash"
+
+		test_response,expected_response = @m.mock_oci_rows_to_nested_hash_2
+		response_hash = @bw.oci_build_nested_rows_hash(test_response)
+		assert_kind_of(Hash,response_hash,"#{__method__}: Did not return Hash")
+		assert_equal response_hash,expected_response,"Returned Hash did not match expected Hash"		
 	end
 
 end
