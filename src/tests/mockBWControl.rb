@@ -108,4 +108,34 @@ class MockBWControl
 
 		return test_response,expected_response
 	end
+
+	def mock_oci_rows_to_nested_hash_2
+		test_response = '
+			<?xml version="1.0" encoding="ISO-8859-1"?>
+			<BroadsoftDocument protocol="OCI" xmlns="C" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><sessionId xmlns="">localhost,1535442458,1393632344857</sessionId><command echo="" xsi:type="UserAlternateNumbersGetResponse17" xmlns=""><distinctiveRing>true</distinctiveRing><alternateEntry01><phoneNumber>1234567891</phoneNumber><extension>1987</extension><ringPattern>Normal</ringPattern></alternateEntry01><alternateEntry02><phoneNumber>1234567892</phoneNumber><extension>1567</extension><ringPattern>Normal</ringPattern></alternateEntry02><alternateEntry08><phoneNumber>1234567898</phoneNumber><ringPattern>Normal</ringPattern></alternateEntry08><alternateEntry10><extension>1115</extension><ringPattern>Normal</ringPattern></alternateEntry10></command></BroadsoftDocument>'
+
+		expected_response = {
+			distinctiveRing: "true",
+			alternateEntry01: {
+				phoneNumber: "1234567891",
+				extension: "1987",
+				ringPattern: "Normal"
+			},
+			alternateEntry02: {
+				phoneNumber: "1234567892",
+				extension: "1567",				
+				ringPattern: "Normal"
+			},
+			alternateEntry08: {
+				phoneNumber: "1234567898",
+				ringPattern: "Normal"				
+			},
+			alternateEntry10: {
+				extension: "1115",
+				ringPattern: "Normal"
+			}
+		}
+		return test_response,expected_response
+	end
+
 end
