@@ -103,6 +103,7 @@ class UserInput
     def get_user_list_w_alt_nums(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
         opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}              
+        opts.on("-e", "--ent ENT", "Enterprise to query in the system") {|v| options[:ent] = v}               
         return opts,options
     end
 
