@@ -16,8 +16,8 @@ class GetAltNumberInfo
 			cmd_ok,config_hash = $bw.get_user_filtered_info(user)
 			[:lastName,:firstName,:phoneNumber,:extension].each { |ele| @users_info[user].push(config_hash[ele]) }
 
-			cmd_ok,svc_list = $bw.get_user_svc_list(user)
-			get_alt_assignment(svc_list,user)
+			cmd_ok,svc_list = $bw.get_user_svc_pack_list(user)
+				get_alt_assignment(svc_list,user)
 			counter += 1
 		end
 		print_users_info
@@ -25,8 +25,11 @@ class GetAltNumberInfo
 
 	def get_alt_assignment(svc_list,user)
 		svc_list.each do |svc_hash|
-			if svc_hash[:Service_Name] == "Alternate Numbers" and svc_hash[:Assigned] == "true"
-				cmd_ok,config_hash = $bw.get_user_alternate_numbers(user)
+			is_alt_svc_assigned = false
+			is_alt_svc_assigned = true if svc_hash[:Service_Name] == "Alternate Numbers" and svc_hash[:Assigned] == "true"
+			is_alt_svc_assigned = true if svc_hash[:Service_Pack_Name] == "Power User" and svc_hash[:Assigned] == "true"
+			if is_alt_svc_assigned == true
+				cmd_ok,config_hash = $bw.get_user_alternate_numbers(user) 
 		        
 		        counter = 1
 		        while counter < 11

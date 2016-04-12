@@ -95,6 +95,18 @@ class BWUser < BWControl
 
     end
 
+    def get_user_svc_pack_list(user=nil)
+        oci_cmd = :UserServiceGetAssignmentListRequest
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        table_header = 'servicePacksAssignmentTable'
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+
+    end
+
     def mod_user_announcement_file(user=nil,file=nil,new_file=nil,type=nil)
         oci_cmd = :UserAnnouncementFileModifyRequest
         config_hash = send(oci_cmd)
