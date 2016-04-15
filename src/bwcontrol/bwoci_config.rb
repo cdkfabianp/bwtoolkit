@@ -339,6 +339,13 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def UserServiceUnassignListRequest(user)
+		config_hash = {
+			userId: user,
+			serviceName: Array.new
+		}
+	end
+
 	def UserSharedCallAppearanceAddEndpointRequest14sp2(user=nil,device=nil,lineport=nil)
         config_hash = {
             userId: user,

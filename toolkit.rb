@@ -106,6 +106,13 @@ def get_user_list_w_alt_nums
 	a.get_users_and_alt_nums
 end
 
+def mod_user_config
+	require_relative 'src/modifyUser'
+	u = ModifyUser.new
+	u.modify_user($options[:user],$options[:sub_cmd])
+end
+
+
 
 # Initialize Global Variables
 $options = (UserInput.new.getOpts)

@@ -213,6 +213,17 @@ class BWUser < BWControl
         return cmd_ok,response_hash
     end
 
+    def mod_user_svc(user=nil,svc_list=nil)
+        oci_cmd = :UserServiceUnassignListRequest
+        config_hash = send(oci_cmd,user)
+        config_hash[:serviceName] = svc_list
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
+    end
+
 	def mod_user_sca_ep(user=nil,device=nil,lineport=nil)
 		oci_cmd = :UserSharedCallAppearanceAddEndpointRequest14sp2
 		config_hash = send(oci_cmd)
