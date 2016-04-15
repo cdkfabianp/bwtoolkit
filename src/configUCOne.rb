@@ -115,6 +115,8 @@ class ConfigUCOne
                 device_num = $1.to_i
             elsif device[:Device_Name] =~ /^#{@group}-device(\d\d\d)$/
                 device_num =$1.to_i
+            elsif device[:Device_Name] =~ /^device(\d\d\d)$/
+                device_num = $1.to_i
             end
             clean_dev_hash[device[:Device_Name]] = device_num unless device_num == nil
         end
