@@ -76,7 +76,7 @@ def audit_rec
 
 	ent_groups = Hash.new(Array.new)
 	if $options.has_key?(:all_groups)
-		cmd_ok,ent_groups = $bw.get_groups_in_system
+		ent_groups = $bw.get_groups_in_system
 	elsif $options.has_key?(:group)
 		ent_groups = {$options[:ent] => [$options[:group]]}
 	else

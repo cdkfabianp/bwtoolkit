@@ -105,6 +105,21 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    def get_users_assigned_to_service(ent=nil,group=nil,service=nil)
+        oci_cmd = :GroupGetUserServiceAssignedUserListRequest
+        config_hash = send(oci_cmd,ent,group,service)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        user_list = Array.new
+        table_header = "userListTable"
+
+        list_of_users,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        list_of_users.each { |user_hash| user_list << user_hash[:User_Id] }
+
+        return cmd_ok,user_list
+    end
+
+
     def mod_add_group_device(dev_hash,dev_mgmt_creds=nil)
         oci_cmd = :GroupAccessDeviceAddRequest14
         if dev_mgmt_creds == nil

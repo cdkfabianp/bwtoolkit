@@ -153,6 +153,14 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def GroupGetUserServiceAssignedUserListRequest(ent=nil,group=nil,svc=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			serviceName: svc
+		}
+	end
+
 	def ServiceProviderCallProcessingGetPolicyRequest17sp4
 		config_hash = {
 			serviceProviderId: ent
@@ -201,6 +209,12 @@ class BWOci < OCIComponents
 				mediaFileType: "WAV",
 			},
 			newAnnouncementFileName: nil
+		}
+	end
+
+	def UserBroadWorksReceptionistEnterpriseGetRequest(user=nil)
+		config_hash = {
+			userId: user
 		}
 	end
 

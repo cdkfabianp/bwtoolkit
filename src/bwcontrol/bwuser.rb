@@ -191,6 +191,17 @@ class BWUser < BWControl
 	 	return cmd_ok,response
 	end
 
+    def get_user_rec_config(user)
+        oci_cmd = :UserBroadWorksReceptionistEnterpriseGetRequest
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        table_header = 'monitoredUserTable'
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
     def get_user_register_status(user=nil)
         oci_cmd = :UserGetRegistrationListRequest
         config_hash = send(oci_cmd,user)
