@@ -23,6 +23,28 @@ class ModifyUser
 
 	end
 
+	def del_user_email(file_name)
+		user_list = Array.new		
+		if File.exist?(file_name)
+			user_list = get_users_from_file(file_name)
+			user_list.each do |user|
+				cmd_ok,response = $bw.mod_user_config(user,config)
+				puts "Deleted #{config} from User: #{user}"
+			end
+		else
+			ent_groups = $bw.get_groups_in_system
+			ent_groups.each do |ent,groups|
+				groups.each do |group| 
+					cmd_ok, user_list = $bw.get_users_in_group(ent,group)
+					user_list.each do |user|
+						cmd_ok,user_email = $bw.get_user_filtered_info(user,:emailAddress)
+						puts "#{ent},#{group},#{user},#{user_email}"
+					end
+				end
+			end
+		end
+	end
+
 
     def get_users_from_file(file)
         user_list = Array.new
