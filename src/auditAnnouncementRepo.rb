@@ -50,10 +50,13 @@ class AuditAnnouncementRepo
 
 	def get_files(response_hash)
 		file_names = Array.new
-		response_hash[:announcementTable].each do |file_info| 
-			file_names.push(file_info[:Name]) if file_info[:Name] =~ /\\/
+
+		unless response_hash[:announcementTable] == nil
+			response_hash[:announcementTable].each do |file_info| 
+				file_names.push(file_info[:Name]) if file_info[:Name] =~ /\\/
+			end
+			file_names = nil if file_names.length == 0
 		end
-		file_names = nil if file_names.length == 0
 		return file_names
 	end
 
