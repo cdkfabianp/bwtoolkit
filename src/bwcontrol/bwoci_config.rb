@@ -120,6 +120,14 @@ class BWOci < OCIComponents
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
 #
+	def GroupDomainGetAssignedListRequest
+		config_hash = {
+			serviceProviderId: nil,
+			groupId: nil,
+			responseSizeLimit: 1000
+		}
+	end
+
 	def GroupDnGetAssignmentListRequest
 		config_hash = {
 			serviceProviderId: nil,
