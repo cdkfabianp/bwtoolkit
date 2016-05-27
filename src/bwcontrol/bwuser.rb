@@ -2,6 +2,24 @@ require_relative 'bwcontrol'
 
 class BWUser < BWControl
 
+    def get_user_addr_type(user)
+        oci_cmd = :UserGetRequest20
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+  
+        user_addr_type = "None"
+        user_addr_type = "Virtual_User" if response_hash.empty?
+        user_addr_type = "Trunk_User" if response_hash.has_key?(:trunkAddressing)
+        user_addr_type = "Hosted_User" if response_hash.has_key?(:accessDeviceEndpoint)
+
+        #Command Errors out if querying AA/HG/CC Virtual User
+        cmd_ok = true if user_addr_type == "Virtual_User"
+
+        return cmd_ok,user_addr_type
+    end
+
     def get_user_alternate_numbers(user=nil)
         oci_cmd = :UserAlternateNumbersGetRequest17
         config_hash = send(oci_cmd,user)
