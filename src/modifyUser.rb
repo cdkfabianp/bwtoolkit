@@ -26,7 +26,7 @@ class ModifyUser
 
 	def remove_messaging(file_name)
 		vm_license = ['Voice Messaging User']
-		field_num = 0
+		field_num = 2
 		user_list = Array.new
 		File.exist?(file_name) ? user_list = get_users_from_file(file_name,field_num) : user_list.push(file_name)
 		

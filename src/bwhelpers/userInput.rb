@@ -25,16 +25,18 @@ class UserInput
             Usage: #{$PROGRAM_NAME} [COMMAND] [OPTIONS]
 
               Valid Commands:
-                find_ent_group:             Search for all entIds and groupIds that match string value              
-                find_tn:                    Search system for TN and return configured Enterprise/Group/User/Activation status
-                tn_list:                    List all TNs assigned to group
-                reg_stats:                  Find all active devices in group based on registrations status and users assigend to device
-                config_ucone:               Configure specified users for UCOne
-                audit_rec:                  Find all users assigned receptionist users and whether they are monitoring any users
-                audio_repo:                 Find all active audio files in Announcement Repository
-                get_poly_list:              Find all Active Polycom Device Types in System 
-                get_user_list_w_alt_nums:   Print list of all users in group including first two alternate numbers assigned
-                mod_user_config:            Modify basic user configuration
+                find_ent_group:                 Search for all entIds and groupIds that match string value              
+                find_tn:                        Search system for TN and return configured Enterprise/Group/User/Activation status
+                tn_list:                        List all TNs assigned to group
+                reg_stats:                      Find all active devices in group based on registrations status and users assigend to device
+                config_ucone:                   Configure specified users for UCOne
+                audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
+                audio_repo:                     Find all active audio files in Announcement Repository
+                audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
+                get_group_to_product_mapping    Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
+                get_poly_list:                  Find all Active Polycom Device Types in System 
+                get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
+                mod_user_config:                Modify basic user configuration
         "
         abort
     end
@@ -50,6 +52,17 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+
+        return opts,options
+    end
+
+    def audit_standard(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v }
+        opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true }
+        opts.on("-t", "--type USER_TYPE", "Specify User type: Hosted_User,Virtual_User,Trunk_User") { |v| options[:user_type] = v }
+        opts.on("-m", "--method AUDIT_METHOD", "[audit|recover] Audit without modifing or Recover licenses") { |v| options[:task] = v }
+        opts.on("-r", "--max_remove MAX_REMOVE", "Number of users to remove license from") { |v| options[:removals] = v }
 
         return opts,options
     end
@@ -72,6 +85,15 @@ class UserInput
     def find_tn(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-t TELEPHONE_NUMBER]"
         opts.on("-t", "--telephone_num TN", "Specifiy single Telephone Number or File containing list of TNs.") { |v| options[:tn] = v }
+        return opts,options
+    end
+
+    def get_group_to_product_mapping(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        opts.on("-v", "--verbose VERBOSE INFO", "Get additional enterprise and group detail") { |v| options[:verbose] = v}
+
         return opts,options
     end
 
