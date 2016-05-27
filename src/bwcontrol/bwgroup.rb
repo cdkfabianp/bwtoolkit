@@ -25,6 +25,20 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    # Return Default Domain for Group
+    def get_group_default_domain(ent=nil,group=nil)
+        oci_cmd = :GroupDomainGetAssignedListRequest
+        config_hash = send(oci_cmd)
+        config_hash[:serviceProviderId] = ent
+        config_hash[:groupId] = group
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        response_hash,cmd_ok = get_rows_response(oci_cmd,config_hash) 
+        default_domain = response_hash[:groupDefaultDomain]
+
+        return cmd_ok,default_domain
+    end
+
     #Get list of all devices in group
     def get_group_device_list(ent,group,dev_type=nil)
         oci_cmd = :GroupAccessDeviceGetListRequest
