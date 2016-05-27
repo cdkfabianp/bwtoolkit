@@ -4,6 +4,7 @@ STDOUT.sync = true
 require_relative 'src/bwcontrol/bwsystem'
 require_relative 'src/bwhelpers/userInput'
 require_relative 'src/bwhelpers/helpers'
+require_relative 'src/bwhelpers/bwhelpers'
 
 
 # Test Method for Playing with BW OCI Calls
@@ -88,6 +89,33 @@ def audit_rec
 
 end
 
+def audit_standard
+	require_relative 'src/auditStandard'
+	r = AuditStandard.new($options[:task],$options[:user_type],$options[:removals])
+
+	ent_groups = $bw_helper.get_groups_to_query
+	ent_groups.each do |ent,group_list|
+		r.get_standard_users(ent,group_list)
+	end
+
+end
+
+def get_group_to_product_mapping
+	require_relative 'src/getGroupToProductMapping'
+	verbose = false
+	if $options.has_key?(:verbose)
+		if $options[:verbose] == "true"
+			verbose = true
+		end
+	end
+
+	z = GroupToProductMapping.new(verbose)
+	ent_groups = $bw_helper.get_groups_to_query
+	ent_groups.each do |ent,group_list|
+		z.get_product_map(ent,group_list)
+	end
+end	
+
 def get_poly_list
 	require_relative 'src/getRegistrationByDeviceType'
 	z = nil
@@ -117,6 +145,7 @@ end
 # Initialize Global Variables
 $options = (UserInput.new.getOpts)
 $helper = Helpers.new
+$bw_helper = BWHelpers.new
 $bw = BWSystem.new
 $bw.bw_login(File.expand_path("../conf/bw_sys.conf",__FILE__))
 
