@@ -39,6 +39,35 @@ class ModifyUser
 
 	end
 
+	def remove_standard(file_name)
+		user_list = Hash.new(Array.new)
+		standard_list = [
+			"Anonymous Call Rejection",
+			"Automatic Callback",
+			"Call Me Now",
+			"Diversion Inhibitor",
+			"Do Not Disturb",
+			"Flexible Seating Guest",
+			"Group Night Forwarding", 
+			"Hoteling Guest",
+			"Security Classification",
+			"Speed Dial 100",
+			"Speed Dial 8"
+		]		
+		if File.exist?(file_name)
+			user_list = get_hash_from_file(file_name,standard_list)
+		else
+			abort "unable to find file: #{file_name}"
+		end
+
+		user_list.each do |user,svc_list|
+			cmd_ok,response = $bw.mod_user_svc(user,svc_list)
+			puts "User: #{user}, REMOVED: #{svc_list}" if cmd_ok = true
+		end
+
+	end
+
+
 	def del_user_email(file_name)
 		user_list = Array.new		
 		if File.exist?(file_name)
@@ -59,6 +88,23 @@ class ModifyUser
 				end
 			end
 		end
+	end
+
+	def get_hash_from_file(file_name,std_list)
+		user_list = Hash.new(Array.new)
+		
+		csv_file = CSV.read(file_name)
+		csv_file.each do |line|
+			svc_list = Array.new
+			counter = 4			
+			while counter <= line.length
+				svc_list.push(line[counter]) if std_list.include?(line[counter])
+				counter += 1
+			end
+			user_list[line[2]] = svc_list
+		end
+
+		return user_list
 	end
 
 
