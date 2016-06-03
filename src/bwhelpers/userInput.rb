@@ -30,6 +30,7 @@ class UserInput
                 tn_list:                        List all TNs assigned to group
                 reg_stats:                      Find all active devices in group based on registrations status and users assigend to device
                 config_ucone:                   Configure specified users for UCOne
+                audit_messaging:                Find all users assigned messaging and whether the service can be removed
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
                 audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
@@ -41,6 +42,14 @@ class UserInput
         abort
     end
 
+    def audit_messaging(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+
+        return opts,options
+    end
+    
     def audio_repo(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group") { |v| options[:group] = v}

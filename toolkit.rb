@@ -62,6 +62,17 @@ def tn_list
     t.group_tn_list($options[:ent],$options[:group])
 end
 
+def audit_messaging
+	require_relative 'src/auditMessaging'
+	a = AuditMessaging.new
+
+	ent_groups = $bw_helper.get_groups_to_query
+	ent_groups.each do |ent,group_list|
+		a.get_messaging_users(ent,group_list)
+	end
+
+end
+
 def audio_repo
 	require_relative 'src/auditAnnouncementRepo'
 
