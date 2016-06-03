@@ -106,7 +106,7 @@ def audit_standard
 
 	ent_groups = $bw_helper.get_groups_to_query
 	ent_groups.each do |ent,group_list|
-		r.get_standard_users(ent,group_list)
+		r.get_assigned_users(ent,group_list)
 	end
 
 end
