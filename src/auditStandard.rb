@@ -25,7 +25,7 @@ class AuditStandard
 
 	def get_standard_users(ent,group_list)
 		group_list.each do |group|
-			standard_users = get_license_assignment(ent,group)
+			standard_users = $bw_helper.get_license_assignment(ent,group,@standard_list)
 			standard_users.each do |user,svc_list|
 				cmd_ok,user_addr_type = $bw.get_user_addr_type(user)
 				puts "AUDIT: #{ent},#{group},#{user},#{user_addr_type},#{svc_list}"
@@ -38,16 +38,6 @@ class AuditStandard
 				end
 			end
 		end
-	end
-
-	def get_license_assignment(ent,group)
-		standard_users = $helper.make_hoa
-		@standard_list.each do |license|
-			cmd_ok,user_list = $bw.get_users_assigned_to_service(ent,group,license)
-			user_list.each { |user| standard_users[user].push(license) }
-		end
-
-		return standard_users
 	end
 
 	def reclaim_licenses(user,svc_list)
