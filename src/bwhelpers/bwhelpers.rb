@@ -14,5 +14,14 @@ class BWHelpers
 		return ent_groups
 	end	
 
+	def get_license_assignment(ent,group,license_query)
+		assigned_users = $helper.make_hoa
+		license_query.each do |license|
+			cmd_ok,user_list = $bw.get_users_assigned_to_service(ent,group,license)
+			user_list.each { |user| assigned_users[user].push(license) }
+		end
+
+		return assigned_users
+	end
 
 end
