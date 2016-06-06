@@ -5,6 +5,7 @@ require_relative 'src/bwcontrol/bwsystem'
 require_relative 'src/bwhelpers/userInput'
 require_relative 'src/bwhelpers/helpers'
 require_relative 'src/bwhelpers/bwhelpers'
+require_relative 'src/bwhelpers/string'
 
 
 # Test Method for Playing with BW OCI Calls
@@ -64,11 +65,14 @@ end
 
 def audit_messaging
 	require_relative 'src/auditMessaging'
-	a = AuditMessaging.new
+	svc_list = ["Voice Messaging User"]
+
+	puts "Got following input values: #{$options[:user_type]},#{$options[:vm_configed]},#{$options[:filter_user]}"
+	a = AuditMessaging.new(svc_list,$options[:user_type],$options[:vm_configed],$options[:filter_user])
 
 	ent_groups = $bw_helper.get_groups_to_query
 	ent_groups.each do |ent,group_list|
-		a.get_messaging_users(ent,group_list)
+		a.get_assigned_users(ent,group_list)
 	end
 
 end
@@ -106,7 +110,7 @@ def audit_standard
 
 	ent_groups = $bw_helper.get_groups_to_query
 	ent_groups.each do |ent,group_list|
-		r.get_assigned_users(ent,group_list)
+		r.get_standard_users(ent,group_list)
 	end
 
 end
