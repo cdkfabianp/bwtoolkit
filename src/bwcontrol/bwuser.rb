@@ -125,6 +125,43 @@ class BWUser < BWControl
 
     end
 
+    def get_user_vm_advanced_config(user=nil)
+        oci_cmd = :UserVoiceMessagingUserGetAdvancedVoiceManagementRequest14sp3
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def get_user_vm_config(user=nil)
+        oci_cmd = :UserVoiceMessagingUserGetVoiceManagementRequest17
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash,cmd_ok = get_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def get_user_vm_in_use(user)
+        vm_is_configured = false
+        vm_is_on = false
+
+        cmd_ok,response_hash = get_user_vm_config(user)
+        vm_is_on = true if response_hash[:isActive] == "true"
+
+        vm_is_configured = true if response_hash[:processing] == "Deliver To Email Address Only"
+
+        unless vm_is_configured
+            cmd_ok,response_hash = get_user_vm_advanced_config(user)
+            vm_is_configured = true if (response_hash.has_key?(:groupMailServerEmailAddress) || response_hash.has_key?(:personalMailServerEmailAddress))
+        end
+
+        return vm_is_on,vm_is_configured
+    end
+
     def mod_user_announcement_file(user=nil,file=nil,new_file=nil,type=nil)
         oci_cmd = :UserAnnouncementFileModifyRequest
         config_hash = send(oci_cmd)
