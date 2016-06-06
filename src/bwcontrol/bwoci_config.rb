@@ -383,4 +383,18 @@ class BWOci < OCIComponents
 	    }
 	end
 
+	def UserVoiceMessagingUserGetAdvancedVoiceManagementRequest14sp3(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
+	def UserVoiceMessagingUserGetVoiceManagementRequest17(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
+
+
 end
