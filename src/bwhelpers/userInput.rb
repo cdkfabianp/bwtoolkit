@@ -46,6 +46,11 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        opts.on("-t", "--type USER_TYPE", "Specify User type: Hosted_User,Virtual_User,Trunk_User") { |v| options[:user_type] = v }
+        opts.on("-c", "--config USER_IS_CONFIG", "Include users with advanced vm config configured") { |v| options[:vm_configed] = v }        
+        opts.on("-u", "--user_filter USER", "Specify part or all of userId to filter on") { |v| options[:filter_user] = v }
+        opts.on("-m", "--method AUDIT_METHOD", "[audit|recover] Audit without modifing or Recover licenses") { |v| options[:task] = v }
+        opts.on("-r", "--max_remove MAX_REMOVE", "Number of users to remove license from") { |v| options[:removals] = v }        
 
         return opts,options
     end
