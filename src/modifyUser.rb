@@ -1,4 +1,3 @@
-require 'csv'
 
 class ModifyUser
 
@@ -14,7 +13,7 @@ class ModifyUser
 		rec_license = ["Client License 4"]
 		field_num = 2
 		user_list = Array.new
-		File.exist?(file_name) ? user_list = get_users_from_file(file_name,field_num) : user_list.push(file_name)
+		File.exist?(file_name) ? user_list = $bw_helper.get_users_from_file(file_name,field_num) : user_list.push(file_name)
 		
 		user_list.each do |user|
 			
@@ -28,7 +27,7 @@ class ModifyUser
 		vm_license = ['Voice Messaging User']
 		field_num = 2
 		user_list = Array.new
-		File.exist?(file_name) ? user_list = get_users_from_file(file_name,field_num) : user_list.push(file_name)
+		File.exist?(file_name) ? user_list = $bw_helper.get_users_from_file(file_name,field_num) : user_list.push(file_name)
 		
 		user_list.each do |user|
 			puts "My user: #{user}"
@@ -55,23 +54,24 @@ class ModifyUser
 			"Speed Dial 8"
 		]		
 		if File.exist?(file_name)
-			user_list = get_hash_from_file(file_name,standard_list)
+			user_list = $bw_helper.get_hash_from_file(file_name,standard_list)
 		else
 			abort "unable to find file: #{file_name}"
 		end
 
 		user_list.each do |user,svc_list|
 			cmd_ok,response = $bw.mod_user_svc(user,svc_list)
-			puts "User: #{user}, REMOVED: #{svc_list}" if cmd_ok = true
+			puts "User: #{user}, REMOVED: #{svc_list}" if cmd_ok == true
 		end
 
 	end
 
 
 	def del_user_email(file_name)
+		field_num = 2
 		user_list = Array.new		
 		if File.exist?(file_name)
-			user_list = get_users_from_file(file_name)
+			user_list = $bw_helper.get_users_from_file(file_name,field_num)
 			user_list.each do |user|
 				cmd_ok,response = $bw.mod_user_config(user,config)
 				puts "Deleted #{config} from User: #{user}"
@@ -90,30 +90,5 @@ class ModifyUser
 		end
 	end
 
-	def get_hash_from_file(file_name,std_list)
-		user_list = Hash.new(Array.new)
-		
-		csv_file = CSV.read(file_name)
-		csv_file.each do |line|
-			svc_list = Array.new
-			counter = 4			
-			while counter <= line.length
-				svc_list.push(line[counter]) if std_list.include?(line[counter])
-				counter += 1
-			end
-			user_list[line[2]] = svc_list
-		end
-
-		return user_list
-	end
-
-
-    def get_users_from_file(file_name,field_num)
-        user_list = Array.new
-        csv_file = CSV.read(file_name)
-        csv_file.each {|line| user_list.push(line[field_num])}
-
-        return user_list
-    end
 
 end
