@@ -147,6 +147,12 @@ def get_user_list_w_alt_nums
 	a.get_users_and_alt_nums
 end
 
+def get_user_profile
+	require_relative 'src/getUserProfile'
+	a = GetProfileInfo.new($options[:user],$options[:fields])
+	a.get_profile_info
+end
+
 def mod_user_config
 	require_relative 'src/modifyUser'
 	u = ModifyUser.new

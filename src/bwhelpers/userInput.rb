@@ -37,6 +37,7 @@ class UserInput
                 get_group_to_product_mapping    Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
+                get_user_profile:               Print specified atributes of USER from User Profile
                 mod_user_config:                Modify basic user configuration
         "
         abort
@@ -142,6 +143,13 @@ class UserInput
         opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}              
         opts.on("-e", "--ent ENT", "Enterprise to query in the system") {|v| options[:ent] = v}               
         return opts,options
+    end
+
+    def get_user_profile(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-u", "--user USER", "User or List of Users to modify in the system") {|v| options[:user] = v}   
+        opts.on("-f", "--cmd CMD", "Script command to run to modify user") {|v| options[:fields] = v}
+        return opts,options        
     end
 
     def mod_user_config(opts,options)

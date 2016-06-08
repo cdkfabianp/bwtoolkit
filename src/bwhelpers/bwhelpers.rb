@@ -1,3 +1,4 @@
+require 'csv'
 
 class BWHelpers
 
@@ -27,5 +28,31 @@ class BWHelpers
 	def valid_user_types
 		return ["Hosted_User", "Trunk_User", "Virtual_User", "None"]	
 	end
+
+	def get_hash_from_file(file_name,std_list)
+		user_list = Hash.new(Array.new)
+		
+		csv_file = CSV.read(file_name)
+		csv_file.each do |line|
+			svc_list = Array.new
+			counter = 4			
+			while counter <= line.length
+				svc_list.push(line[counter]) if std_list.include?(line[counter])
+				counter += 1
+			end
+			user_list[line[2]] = svc_list
+		end
+
+		return user_list
+	end
+
+
+    def get_users_from_file(file_name,field_num)
+        user_list = Array.new
+        csv_file = CSV.read(file_name)
+        csv_file.each {|line| user_list.push(line[field_num])}
+
+        return user_list
+    end
 
 end
