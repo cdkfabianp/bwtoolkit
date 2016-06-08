@@ -54,8 +54,10 @@ class AuditStandard
 		audit_type = "audit" unless audit_type == "recover"
 		
 		#Validate User Type
-		valid_user_types = ["Hosted_User", "Trunk_User", "Virtual_User", "None"]		
-		response = "Invalid User Type: (#{user_type})\n  Valid options are #{valid_user_types}" if audit_type == "recover" && valid_user_types.include?(user_type) == false
+
+		# Moved to BW_Helpers to populate Array of valid user types
+		# valid_user_types = ["Hosted_User", "Trunk_User", "Virtual_User", "None"]		
+		response = "Invalid User Type: (#{user_type})\n  Valid options are #{$bw_helper.valid_user_types}" if audit_type == "recover" && $bw_helper.valid_user_types.include?(user_type) == false
 
 		#Convert Removals to Integer
 		new_removals = 0
