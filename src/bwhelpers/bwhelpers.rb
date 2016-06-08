@@ -24,4 +24,8 @@ class BWHelpers
 		return assigned_users
 	end
 
+	def valid_user_types
+		return ["Hosted_User", "Trunk_User", "Virtual_User", "None"]	
+	end
+
 end

@@ -66,8 +66,6 @@ end
 def audit_messaging
 	require_relative 'src/auditMessaging'
 	svc_list = ["Voice Messaging User"]
-
-	puts "Got following input values: #{$options[:user_type]},#{$options[:vm_configed]},#{$options[:filter_user]}"
 	a = AuditMessaging.new(svc_list,$options[:user_type],$options[:vm_configed],$options[:filter_user])
 
 	ent_groups = $bw_helper.get_groups_to_query
