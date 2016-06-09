@@ -113,6 +113,17 @@ class BWUser < BWControl
 
     end
 
+    def get_user_clean_svc_list(user=nil)
+        svc_list = Array.new
+        cmd_ok,response_hash = $bw.get_user_svc_list(user)
+        response_hash.each do |svc_info|
+            svc_list.push(svc_info[:Service_Name]) if svc_info[:Assigned] == "true"
+        end
+
+        return svc_list
+    end
+
+
     def get_user_svc_pack_list(user=nil)
         oci_cmd = :UserServiceGetAssignmentListRequest
         config_hash = send(oci_cmd,user)
