@@ -36,6 +36,7 @@ class UserInput
                 audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
                 get_group_to_product_mapping    Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
+                get_user_license:               Get all licenses assigned to users specified in file                
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
                 get_user_profile:               Print specified atributes of USER from User Profile
                 mod_user_config:                Modify basic user configuration
@@ -136,6 +137,13 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify group to retrieve TN List from") {|v| options[:group] = v}
         return opts,options
+    end
+
+    def get_user_license(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-f", "--file FILE_LIST", "File List of Users to Query") {|v| options[:file] = v}   
+        opts.on("-n", "--field FIELD_NUM", "Column Number (0 index) of location of UserID in File") {|v| options[:field_num] = v}
+        return opts,options 
     end
 
     def get_user_list_w_alt_nums(opts,options)
