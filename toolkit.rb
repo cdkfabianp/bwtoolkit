@@ -141,12 +141,6 @@ def get_poly_list
 
 end
 
-def get_user_license
-	require_relative 'src/getUserLicense'
-	a = GetUserLicense.new
-	a.get_license_info($options[:file],$options[:field_num])
-end
-
 def get_user_list_w_alt_nums
 	require_relative 'src/getUserAltInfo'
 	a = GetAltNumberInfo.new($options[:ent],$options[:group])
@@ -155,8 +149,8 @@ end
 
 def get_user_profile
 	require_relative 'src/getUserProfile'
-	a = GetProfileInfo.new($options[:user],$options[:fields])
-	a.get_profile_info
+	a = GetProfileInfo.new
+	a.get_user_info($options[:sub_cmd])
 end
 
 def mod_user_config
