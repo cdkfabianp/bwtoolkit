@@ -36,7 +36,6 @@ class UserInput
                 audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
                 get_group_to_product_mapping    Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
-                get_user_license:               Get all licenses assigned to users specified in file                
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
                 get_user_profile:               Print specified atributes of USER from User Profile
                 mod_user_config:                Modify basic user configuration
@@ -139,13 +138,6 @@ class UserInput
         return opts,options
     end
 
-    def get_user_license(opts,options)
-        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
-        opts.on("-f", "--file FILE_LIST", "File List of Users to Query") {|v| options[:file] = v}   
-        opts.on("-n", "--field FIELD_NUM", "Column Number (0 index) of location of UserID in File") {|v| options[:field_num] = v}
-        return opts,options 
-    end
-
     def get_user_list_w_alt_nums(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
         opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}              
@@ -155,8 +147,13 @@ class UserInput
 
     def get_user_profile(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
-        opts.on("-u", "--user USER", "User or List of Users to modify in the system") {|v| options[:user] = v}   
-        opts.on("-f", "--cmd CMD", "Script command to run to modify user") {|v| options[:fields] = v}
+        opts.on("-f", "--file FILE", "List of Users to audit in the system") {|v| options[:file] = v}   
+        opts.on("-n", "--field FIELD_NUM", "Column Number (0 index) of location of UserID in File") {|v| options[:field_num] = v}        
+        opts.on("-q", "--query QUERY", "Query Fields to Return") {|v| options[:query] = v}
+        opts.on("-x", "--cmd CMD", "Audit command to run to query user") {|v| options[:sub_cmd] = v}
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        opts.on("-u", "--user_filter USER", "Specify part or all of userId to filter on") { |v| options[:filter_user] = v }
         return opts,options        
     end
 
