@@ -116,6 +116,13 @@ class BWOci < OCIComponents
     	return config_hash
     end
 
+    def GroupAdminGetListRequest(ent=nil,group=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,
+    	}
+    end
+    
 #
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
@@ -169,6 +176,10 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def ServiceProviderAdminGetListRequest14(ent=nil)
+		config_hash = {
+			serviceProviderId: ent
+		}
 	def ServiceProviderCallProcessingGetPolicyRequest17sp4
 		config_hash = {
 			serviceProviderId: ent
@@ -265,6 +276,17 @@ class BWOci < OCIComponents
 		config_hash = {
 			serviceProviderId: nil,
 			GroupId: nil,
+		}
+	end
+
+	def UserGetListInSystemRequest(ele)
+		config_hash = {
+			responseSizeLimit: 3000,
+			searchCriteriaUserId: {
+				mode: ele[:mode],
+				value: ele[:value],
+				isCaseInsensitive: true
+			},
 		}
 	end
 
