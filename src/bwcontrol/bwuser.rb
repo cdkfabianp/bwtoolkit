@@ -88,7 +88,21 @@ class BWUser < BWControl
         table_of_users.each { |user_hash| users << user_hash[:User_Id] }
 
         return cmd_ok,users
-    end    
+    end   
+
+    def get_users_in_sys_by_id(ele)
+        oci_cmd = :UserGetListInSystemRequest
+        config_hash = send(oci_cmd,ele)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ele == nil
+
+        users = Array.new
+        table_header = "userTable"
+
+        table_of_users,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        table_of_users.each { |user_hash| users << user_hash[:User_Id] }
+
+        return cmd_ok,users        
+    end     
 
     def get_service_users_in_group(ent,group)
         cmd_ok,response_hash = get_ent_service_list(ent)
