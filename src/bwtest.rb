@@ -1,10 +1,10 @@
 class BWTest
 
-	def get_svc_list
-		user = 'peteGRP-user002'
-		cmd_ok,response = $bw.get_user_svc_list(user)
-		puts response
-	end
+  	def get_svc_list
+  		user = 'peteGRP-user002'
+  		cmd_ok,response = $bw.get_user_svc_list(user)
+  		puts response
+  	end
 
     def add_ucone_services
     	user = 'peteGRP-user002'
@@ -32,4 +32,9 @@ class BWTest
     	puts "CMD_OK: #{cmd_ok} and result: #{response}"
 
     end
+
+    def get_admin_list
+      puts $bw.get_group_admin_list({ent: "peteENT", group: "peteGRP"})
+    end
+
 end

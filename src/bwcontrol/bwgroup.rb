@@ -14,6 +14,19 @@ class BWGroup < BWUser
         return cmd_ok,groups
     end
 
+    def get_group_admin_list(ele=nil)
+        oci_cmd = :GroupAdminGetListRequest
+        config_hash = send(oci_cmd,ele[:ent],ele[:group])
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ele[:ent] == nil
+
+        admins = Array.new
+        table_header = "groupAdminTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        response_hash.each { |admin_hash| admins.push(admin_hash[:Administrator_ID])}
+
+        return cmd_ok,admins
+    end        
+
     def get_group_annoucement_list(ent=nil,group=nil)
         oci_cmd = :GroupAnnouncementFileGetListRequest
         config_hash = send(oci_cmd)

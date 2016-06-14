@@ -34,7 +34,8 @@ class UserInput
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
                 audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
-                get_group_to_product_mapping    Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
+                get_ent_info:                   Get Info About Ents and their Groups
+                get_group_to_product_mapping:   Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
                 get_user_profile:               Print specified atributes of USER from User Profile
@@ -102,6 +103,15 @@ class UserInput
         opts.on("-t", "--telephone_num TN", "Specifiy single Telephone Number or File containing list of TNs.") { |v| options[:tn] = v }
         return opts,options
     end
+
+    def get_ent_info(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-x", "--cmd CMD", "Audit command to run to query user") {|v| options[:sub_cmd] = v}
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        return opts,options
+    end
+
 
     def get_group_to_product_mapping(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"

@@ -13,6 +13,19 @@ class BWEnt < BWGroup
         return cmd_ok,ents
     end
 
+    def get_ent_admin_list(ent=nil)
+        oci_cmd = :ServiceProviderAdminGetListRequest14
+        config_hash = send(oci_cmd,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        admins = Array.new
+        table_header = "serviceProviderAdminTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        response_hash.each { |admin_hash| admins.push(admin_hash[:Administrator_ID])}
+
+        return cmd_ok,admins
+    end
+
 	def get_ent_by_group_id(group)
 		oci_cmd = :GroupGetListInSystemRequest
 		config_hash = GroupGetListInSystemRequest()

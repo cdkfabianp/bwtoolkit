@@ -122,7 +122,7 @@ class BWOci < OCIComponents
     		groupId: group,
     	}
     end
-    
+
 #
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
@@ -180,6 +180,8 @@ class BWOci < OCIComponents
 		config_hash = {
 			serviceProviderId: ent
 		}
+	end
+	
 	def ServiceProviderCallProcessingGetPolicyRequest17sp4
 		config_hash = {
 			serviceProviderId: ent

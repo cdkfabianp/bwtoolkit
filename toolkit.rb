@@ -13,7 +13,7 @@ def bwtest
 	require_relative 'src/bwtest'
 
 	t = BWTest.new
-	t.get_user_profile
+	t.get_admin_list
 end
 
 # Configure specified users in group for UCOne
@@ -112,6 +112,25 @@ def audit_standard
 	end
 
 end
+
+def get_ent_info
+	require_relative 'src/getEntProfile'
+	a = GetEntInfo.new
+
+	ent_groups = $bw_helper.get_groups_to_query
+	ent_groups.each do |ent,group_list|
+		a.get_ent_info($options[:sub_cmd],{ent: ent, group: group_list})
+	end
+
+	puts "My admin tracker"
+	$admin_list.each do |ent,info|
+		puts "#{ent} has Admin? #{info[:ent_admin]}"
+		info[:groups].each do |group|
+			puts "#{group[:group]} has Admin? #{group[:group_admin]}"
+		end
+	end
+end
+
 
 def get_group_to_product_mapping
 	require_relative 'src/getGroupToProductMapping'
