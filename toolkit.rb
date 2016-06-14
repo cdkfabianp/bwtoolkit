@@ -115,6 +115,8 @@ end
 
 def get_ent_info
 	require_relative 'src/getEntProfile'
+	$admin_list = Hash.new(Hash.new)
+
 	a = GetEntInfo.new
 
 	ent_groups = $bw_helper.get_groups_to_query
@@ -124,9 +126,9 @@ def get_ent_info
 
 	puts "My admin tracker"
 	$admin_list.each do |ent,info|
-		puts "#{ent} has Admin? #{info[:ent_admin]}"
+		puts "#{ent},#{info[:ent_name]},__ENT__,#{info[:ent_admin]}"
 		info[:groups].each do |group|
-			puts "#{group[:group]} has Admin? #{group[:group_admin]}"
+			puts "#{ent},#{group[:group]},#{group[:group_name]},#{group[:product]},#{group[:group_admin]}"
 		end
 	end
 end
