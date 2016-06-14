@@ -126,9 +126,9 @@ def get_ent_info
 
 	puts "My admin tracker"
 	$admin_list.each do |ent,info|
-		puts "#{ent},#{info[:ent_name]},__ENT__,#{info[:ent_admin]}"
+		puts "\"#{ent}\",\"#{info[:ent_name]}\",\"__ENT__\",\"#{info[:ent_admin]}\""
 		info[:groups].each do |group|
-			puts "#{ent},#{group[:group]},#{group[:group_name]},#{group[:product]},#{group[:group_admin]}"
+			puts "\"#{ent}\",\"#{group[:group]}\",\"#{group[:group_name]}\",\"#{group[:product]}\",\"#{group[:group_admin]}\""
 		end
 	end
 end
