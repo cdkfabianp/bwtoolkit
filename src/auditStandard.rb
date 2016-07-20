@@ -2,20 +2,28 @@
 class AuditStandard
 
 	def initialize(audit_type,user_type,removals)
+		# @standard_list = [
+		# 	"Anonymous Call Rejection",
+		# 	"Automatic Callback",
+		# 	"Call Me Now",
+		# 	"Diversion Inhibitor",
+		# 	"Do Not Disturb",
+		# 	"Flexible Seating Guest",
+		# 	"Group Night Forwarding", 
+		# 	"Hoteling Guest",
+		# 	"Security Classification",
+		# 	"Speed Dial 100",
+		# 	"Speed Dial 8"
+		# ]
 		@standard_list = [
-			"Anonymous Call Rejection",
-			"Automatic Callback",
-			"Call Me Now",
-			"Diversion Inhibitor",
-			"Do Not Disturb",
-			"Flexible Seating Guest",
-			"Group Night Forwarding", 
-			"Hoteling Guest",
-			"Security Classification",
-			"Speed Dial 100",
-			"Speed Dial 8"
+			"Call Forwarding Always",
+			"Call Forwarding Busy",
+			"Call Forwarding No Answer",
+			"Call Forwarding Not Reachable"
 		]
-
+		puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		puts "!!THIS SCRIPT IS CURRENTLY AUDITING VUPP1 Service PACK!!"
+		puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 		@removal_count = 0
 		@audit_type,@user_type,@removals,response = validate_input(audit_type,user_type,removals)
 		abort "Invalid input\n  #{response}" if response != nil
