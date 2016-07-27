@@ -1,0 +1,20 @@
+{
+	"license_pack1":[
+		"service 1",
+		"service 2",	
+	],
+	"license_pack2":[
+		"service 3",
+		"service 4",
+		"service 5",
+		"service 6
+	],
+	"license_pack3":[
+		"service 7",
+		"service 8",
+		"service 9",
+		"service 10",
+		"service 11",
+		"service 12"
+	]
+}
