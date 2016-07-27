@@ -33,7 +33,7 @@ class UserInput
                 audit_messaging:                Find all users assigned messaging and whether the service can be removed
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
-                audit_standard:                 Find all users assigned 3STANDARD licenses and whether they can be removed or not
+                audit_service_pack:             Find all active users assigned to a specific service pack                
                 get_ent_info:                   Get Info About Ents and their Groups
                 get_group_to_product_mapping:   Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
@@ -72,15 +72,13 @@ class UserInput
         return opts,options
     end
 
-    def audit_standard(opts,options)
+    def audit_service_pack(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v }
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true }
         opts.on("-t", "--type USER_TYPE", "Specify User type: Hosted_User,Virtual_User,Trunk_User") { |v| options[:user_type] = v }
-        opts.on("-m", "--method AUDIT_METHOD", "[audit|recover] Audit without modifing or Recover licenses") { |v| options[:task] = v }
-        opts.on("-r", "--max_remove MAX_REMOVE", "Number of users to remove license from") { |v| options[:removals] = v }
-
-        return opts,options
+        opts.on("-s", "--sp SVC_PACK", "Specify service pack to query, examples: vupp1, standard") { |v| options[:sp] = v }        
+        return opts,options        
     end
 
     def config_ucone(opts,options)
