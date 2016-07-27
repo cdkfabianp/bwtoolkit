@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 #
 STDOUT.sync = true
+require 'pathname'
 require_relative 'src/bwcontrol/bwsystem'
 require_relative 'src/bwhelpers/userInput'
 require_relative 'src/bwhelpers/helpers'
@@ -63,6 +64,16 @@ def tn_list
     t.group_tn_list($options[:ent],$options[:group])
 end
 
+def audit_service_pack
+	require_relative 'src/auditLicensePack'
+	a = AuditServicePack.new($options[:user_type],$options[:sp])
+
+	ent_groups = $bw_helper.get_groups_to_query
+	ent_groups.each do |ent,group_list|
+		a.get_assigned_users(ent,group_list)
+	end
+end
+
 def audit_messaging
 	require_relative 'src/auditMessaging'
 	svc_list = ["Voice Messaging User"]
@@ -98,17 +109,6 @@ def audit_rec
 	end
 	ent_groups.each do |ent,group_list|
 	    group_list.each {|group| r.get_receptionist_users(ent,group)}
-	end
-
-end
-
-def audit_standard
-	require_relative 'src/auditStandard'
-	r = AuditStandard.new($options[:task],$options[:user_type],$options[:removals])
-
-	ent_groups = $bw_helper.get_groups_to_query
-	ent_groups.each do |ent,group_list|
-		r.get_standard_users(ent,group_list)
 	end
 
 end
