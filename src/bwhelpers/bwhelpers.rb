@@ -25,10 +25,6 @@ class BWHelpers
 		return assigned_users
 	end
 
-	def valid_user_types
-		return ["Hosted_User", "Trunk_User", "Virtual_User", "None"]	
-	end
-
 	def get_hash_from_file(file_name,std_list)
 		user_list = Hash.new(Array.new)
 		
@@ -46,7 +42,6 @@ class BWHelpers
 		return user_list
 	end
 
-
     def get_users_from_file(file_name,field_num)
         user_list = Array.new
         csv_file = CSV.read(file_name)
@@ -54,5 +49,17 @@ class BWHelpers
 
         return user_list
     end
+
+	def get_license_list
+		sp_config_file = File.expand_path("../../../conf/service_pack.conf",__FILE__)
+        File.exist?(sp_config_file) ? json_data = File.read(sp_config_file) : json_data =  sp_config_file	
+
+		license_hash = JSON.parse(json_data, :symbolize_names => true)   
+        return license_hash	
+	end	
+	
+	def valid_user_types
+		return ["Hosted_User", "Trunk_User", "Virtual_User", "None"]	
+	end    
 
 end
