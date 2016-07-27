@@ -1,4 +1,5 @@
 conf/bw_sys.conf
+conf/service_pack.conf
 *.gem
 *.rbc
 /.config
