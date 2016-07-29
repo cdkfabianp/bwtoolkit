@@ -6,30 +6,34 @@ class GetRegByDeviceType
 		@device_search_list = ['Polycom Soundpoint IP 500', 'Polycom Soundpoint IP 601'] 
 		@device_search_list = $bw.get_sys_poly_device_types if all_poly == true
 		puts "Searching System for Registrations on the following devices:\n #{@device_search_list}\n---------------------------------------\n"
-		@counts = counts_only
+		@counts = false
+		@counts = counts_only if counts_only == "true"
+
 	end
 
 	def get_poly_list
-		puts @counts == "true" ? "Enterprise,Group,Configured,Registered" : "Enterprise,Group,DeviceType,DeviceVersion,DeviceConfigType,DeviceMac"
+		puts @counts == true ? "Enterprise,Group,Configured,Registered" : "Enterprise,Group,Group Name,DeviceType,DeviceVersion,DeviceConfigType,DeviceMac"
 		@ent_groups.each do |ent,groups|
 			groups.each do |group|
+				cmd_ok,g_profile = $bw.get_group_profile(ent,group)
+			 	g_profile.has_key?(:groupName) ? group_name = g_profile[:groupName] : group_name = "__NONE__"
 				devices_list = $bw.get_group_device_list_by_type(ent,group,@device_search_list)
 				ua_device_list = get_reg_info(ent,group,devices_list)
 				configed_devices = devices_list.length
 				reged_devices = ua_device_list.length
-				@counts == "true" ? print_poly_reg_counts(ent,group,configed_devices,reged_devices) : print_poly_reg_list(ent,group,ua_device_list)
+				@counts == true ? print_poly_reg_counts(ent,group,group_name,configed_devices,reged_devices) : print_poly_reg_list(ent,group,group_name,ua_device_list)
 			end
 		end
 
 
 	end
 
-	def print_poly_reg_counts(ent,group,configed_devices,reged_devices)
-		puts "#{ent},#{group},#{configed_devices},#{reged_devices}"	 if configed_devices > 0
+	def print_poly_reg_counts(ent,group,group_name,configed_devices,reged_devices)
+		puts "\"#{ent}\",\"#{group}\ - #{group_name}\",\"#{configed_devices}\",\"#{reged_devices}\"" if configed_devices > 0
 	end
 
-	def print_poly_reg_list(ent,group,ua_device_list)
-		ua_device_list.each { |dev_mac,dev_info| puts "#{ent},#{group},#{dev_info.join(",")},#{dev_mac}" }		
+	def print_poly_reg_list(ent,group,group_name,ua_device_list)
+		ua_device_list.each { |dev_mac,dev_info| puts "\"#{ent}\",\"#{group} - #{group_name}\",#{dev_info.join(",")},#{dev_mac}" }		
 	end
 
 	def get_reg_info(ent,group,devices_list)
