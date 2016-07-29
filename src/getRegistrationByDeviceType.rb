@@ -29,11 +29,11 @@ class GetRegByDeviceType
 	end
 
 	def print_poly_reg_counts(ent,group,group_name,configed_devices,reged_devices)
-		puts "\"#{ent}\",\"#{group}\ - #{group_name}\",\"#{configed_devices}\",\"#{reged_devices}\"" if configed_devices > 0
+		puts "#{ent}|#{group} - #{group_name}|#{configed_devices}|#{reged_devices}" if configed_devices > 0
 	end
 
 	def print_poly_reg_list(ent,group,group_name,ua_device_list)
-		ua_device_list.each { |dev_mac,dev_info| puts "\"#{ent}\",\"#{group} - #{group_name}\",#{dev_info.join(",")},#{dev_mac}" }		
+		ua_device_list.each { |dev_mac,dev_info| puts "#{ent}|#{group} - #{group_name}|#{dev_info.join("|")}|#{dev_mac}" }		
 	end
 
 	def get_reg_info(ent,group,devices_list)
