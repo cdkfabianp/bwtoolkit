@@ -144,6 +144,33 @@ class BWGroup < BWUser
         return cmd_ok,expanded_tn_list
     end
 
+    def get_group_hg_config(svc_id=nil)
+        oci_cmd = :GroupHuntGroupGetInstanceRequest20
+        config_hash = send(oci_cmd,svc_id)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id = nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        table_header = "agentUserTable"
+        assigned_users,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        response_hash[:agentUserTable] = assigned_users
+
+        return cmd_ok,response_hash
+    end
+
+    def get_group_hg_list(ent=nil,group=nil)
+        oci_cmd = :GroupHuntGroupGetInstanceListRequest
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        # get_nested_rows does not handle nested tables right now
+        table_header = "huntGroupTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash                
+
+    end
+
     def get_group_profile(ent=nil,group=nil)
         oci_cmd = :GroupGetRequest14sp7
         config_hash = send(oci_cmd,ent,group)

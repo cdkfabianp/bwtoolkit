@@ -189,6 +189,19 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def GroupHuntGroupGetInstanceListRequest(ent=nil,group=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+		}
+	end
+
+	def GroupHuntGroupGetInstanceRequest20(svc_id=nil)
+		config_hash = {
+			serviceUserId: svc_id
+		}
+	end
+
 	def ServiceProviderAdminGetListRequest14(ent=nil)
 		config_hash = {
 			serviceProviderId: ent

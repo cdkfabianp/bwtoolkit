@@ -59,7 +59,34 @@ class BWTest
         puts "------------------------------------------"
         puts "=========================================="
       end
+    end
 
+    def get_hg_config
+      group = "76150432"
+      ent = "25124801"
+
+      group = "peteGRP"
+      ent = "peteENT"
+
+      cmd_ok,response = $bw.get_group_hg_list(ent,group)
+      puts response
+
+      response.each do |hg|
+        hg_id = hg[:Service_User_Id]
+        cmd_ok,svc_list = $bw.get_user_clean_svc_list(hg_id)
+        cmd_ok,hg_config = $bw.get_group_hg_config(hg_id)
+        puts ">>>>>>>>>> #{hg_id} <<<<<<<<<<<<<<<<<<<<"
+        puts "HG CONFIG"
+        puts hg_config
+        puts "------------------------------------------"
+        puts "HG AGENT LIST"
+        puts hg_config[:agentUserTable]
+        puts "------------------------------------------"        
+        puts "HG SVC LIST"
+        puts svc_list
+        puts "------------------------------------------"
+        puts "=========================================="
+      end
     end
 
 
