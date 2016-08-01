@@ -14,7 +14,7 @@ def bwtest
 	require_relative 'src/bwtest'
 
 	t = BWTest.new
-	t.get_admin_list
+	t.get_aa_config
 end
 
 # Configure specified users in group for UCOne

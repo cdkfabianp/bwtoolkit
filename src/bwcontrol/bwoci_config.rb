@@ -51,6 +51,19 @@ class BWOci < OCIComponents
     	}
     end
 
+    def GroupAutoAttendantGetInstanceListRequest(ent=nil,group=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group
+    	}
+    end
+
+    def GroupAutoAttendantGetInstanceRequest20(svc_id=nil)
+    	config_hash = {
+    		serviceUserId: svc_id
+    	}
+    end
+
     def GroupCallProcessingGetPolicyRequest17sp4
     	config_hash = {
 			serviceProviderId: nil,

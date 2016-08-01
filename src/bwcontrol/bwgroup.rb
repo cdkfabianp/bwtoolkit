@@ -38,6 +38,27 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    def get_group_aa_config(svc_id=nil)
+        oci_cmd = :GroupAutoAttendantGetInstanceRequest20
+        config_hash = send(oci_cmd,svc_id)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id == nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def get_group_aa_list(ent=nil,group=nil)
+        oci_cmd = :GroupAutoAttendantGetInstanceListRequest
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = "autoAttendantTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
     # Return Default Domain for Group
     def get_group_default_domain(ent=nil,group=nil)
         oci_cmd = :GroupDomainGetAssignedListRequest

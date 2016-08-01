@@ -37,4 +37,31 @@ class BWTest
       puts $bw.get_group_admin_list({ent: "peteENT", group: "peteGRP"})
     end
 
+    def get_aa_config
+      group = "76150432"
+      ent = "25124801"
+
+      group = "peteGRP"
+      ent = "peteENT"
+
+      cmd_ok,response = $bw.get_group_aa_list(ent,group)
+      puts response
+      response.each do |aa|
+        aa_name = aa[:Service_User_Id]
+        cmd_ok,svc_list = $bw.get_user_clean_svc_list(aa_name)
+        cmd_ok,aa_config = $bw.get_group_aa_config(aa_name)
+        puts ">>>>>>>>>> #{aa_name} <<<<<<<<<<<<<<<<<<<<"
+        puts "AA CONFIG"
+        puts aa_config
+        puts "------------------------------------------"
+        puts "AA SVC LIST"
+        puts svc_list
+        puts "------------------------------------------"
+        puts "=========================================="
+      end
+
+    end
+
+
+
 end
