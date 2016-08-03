@@ -42,6 +42,21 @@ class BWHelpers
 		return user_list
 	end
 
+	def get_svc_to_oci_map(svc)
+		svc_map = {
+			"Call Forwarding Always" => [:UserCallForwardingAlwaysGetRequest],
+			"Call Forwarding Busy" => [:UserCallForwardingBusyGetRequest],
+			"Call Forwarding No Answer" => [:UserCallForwardingNoAnswerGetRequest13mp16, :CallForwardingNoAnswerNumberOfRings],
+			"Call Forwarding Not Reachable" => [:UserCallForwardingNotReachableGetRequest],
+			"Alternate Numbers" => [:UserAlternateNumbersGetRequest17],
+			"Call Forwarding Selective" => [:UserCallForwardingSelectiveGetRequest16,:UserCallForwardingSelectiveGetCriteriaRequest16],
+			"Selective Call Acceptance" => [:UserSelectiveCallAcceptanceGetCriteriaListRequest, :UserSelectiveCallAcceptanceGetCriteriaRequest16, :UserSelectiveCallAcceptanceModifyActiveCriteriaListRequest],
+			"Selective Call Rejection" => [:SelectiveCallRejectionCriteriaCallType, :UserSelectiveCallRejectionAddCriteriaRequest16, :UserSelectiveCallRejectionGetCriteriaListRequest, :UserSelectiveCallRejectionGetCriteriaRequest16sp1, :UserSelectiveCallRejectionModifyActiveCriteriaListRequest]							
+		}
+
+		return svc_map[svc]
+	end
+
     def get_users_from_file(file_name,field_num)
         user_list = Array.new
         csv_file = CSV.read(file_name)

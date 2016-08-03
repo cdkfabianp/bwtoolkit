@@ -62,6 +62,8 @@ class BWTest
     end
 
     def get_hg_config
+      # require 'json'
+
       group = "76150432"
       ent = "25124801"
 
@@ -74,10 +76,10 @@ class BWTest
       response.each do |hg|
         hg_id = hg[:Service_User_Id]
         cmd_ok,svc_list = $bw.get_user_clean_svc_list(hg_id)
-        cmd_ok,hg_config = $bw.get_group_hg_config(hg_id)
+        cmd_ok,hg_config = $bw.get_group_hg_svc_config(hg_id)
         puts ">>>>>>>>>> #{hg_id} <<<<<<<<<<<<<<<<<<<<"
-        puts "HG CONFIG"
-        puts hg_config
+        puts "HG CONFIG IN JSON"
+        puts hg_config.to_json
         puts "------------------------------------------"
         puts "HG AGENT LIST"
         puts hg_config[:agentUserTable]

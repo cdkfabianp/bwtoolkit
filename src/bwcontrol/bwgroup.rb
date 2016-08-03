@@ -158,6 +158,22 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    def get_group_hg_svc_config(svc_id=nil)
+        cmd_ok,response_hash = get_group_hg_config(svc_id)
+        svc_list = get_user_clean_svc_list(svc_id)
+        if svc_list.length > 0
+            svc_list.each do |svc| 
+                puts "My SVC OCI COMMANDS"
+                puts $bw_helper.get_svc_to_oci_map(svc)           
+            end
+        else
+            puts "No SVC INFO"
+        end
+
+        return cmd_ok,response_hash
+    end
+
+
     def get_group_hg_list(ent=nil,group=nil)
         oci_cmd = :GroupHuntGroupGetInstanceListRequest
         config_hash = send(oci_cmd,ent,group)
