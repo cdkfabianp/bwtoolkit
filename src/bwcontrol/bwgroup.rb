@@ -147,7 +147,7 @@ class BWGroup < BWUser
     def get_group_hg_config(svc_id=nil)
         oci_cmd = :GroupHuntGroupGetInstanceRequest20
         config_hash = send(oci_cmd,svc_id)
-        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id = nil
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id == nil
 
         response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
 
