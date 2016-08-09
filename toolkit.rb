@@ -43,7 +43,13 @@ def find_tn
 	require_relative 'src/tn_search'
 
 	t = TnSearch.new
-	t.tn_search($options[:tn])
+
+	if File.exists?($options[:tn])
+		tn_list = $bw_helper.get_users_from_file($options[:tn],0)
+	else
+		tn_list = $options[:tn]
+	end
+	t.tn_search(tn_list)
 end
 
 # Find all active devices in group based on active registrations and configured users
