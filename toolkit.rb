@@ -43,11 +43,11 @@ def find_tn
 	require_relative 'src/tn_search'
 
 	t = TnSearch.new
-
+	tn_list = Array.new
 	if File.exists?($options[:tn])
 		tn_list = $bw_helper.get_users_from_file($options[:tn],0)
 	else
-		tn_list = $options[:tn]
+		tn_list.push($options[:tn])
 	end
 	t.tn_search(tn_list)
 end
