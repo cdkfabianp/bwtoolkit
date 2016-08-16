@@ -49,7 +49,7 @@ def find_tn
 	else
 		tn_list.push($options[:tn])
 	end
-	t.tn_search(tn_list)
+	t.print_info(tn_list)
 end
 
 # Find all active devices in group based on active registrations and configured users
