@@ -42,20 +42,27 @@ PARAGRAPH
     def tn_search(tns)
         # tns = Array.new
         # tns << tn_number
+        tn_info = Hash.new(Hash.new)
         tns.each do |tn|  
             e164_number = normalize_tn(tn)
             if e164_number
                 cmd_ok,response_hash = $bw.find_tn_assignment(e164_number)
-                response_hash = {} if cmd_ok == false || e164_number == false
-                # puts "#{response_hash}"
-                puts print_marchex_info(tn,response_hash)
+                # response_hash = {} if cmd_ok == false || e164_number == false
             else
-                puts "#{tn},invalid number format"
+                response_hash =  {result: "invalid number format"}
             end
+            tn_info[tn] = response_hash
         end
+        
+        return tn_info
     end
 
-    def print_marchex_info(t,info)
+    def print_info(tns)
+        puts tn_search(tns)
+    end
+
+    def print_marchex_info(tns)
+        tn_info = tn_search(tns)
         print_string = "#{t},"
         if t.length > 0
             print_string += "#{info[:serviceProviderId]},#{info[:groupId]},#{info[:isActivated]}"
