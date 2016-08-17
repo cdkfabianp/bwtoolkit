@@ -34,7 +34,6 @@ class BWControl < BWOci
     def send_request(oci_cmd, config_hash)
         request = build_request(oci_cmd,config_hash)
         print_response(request) if @debug_verbose
-
         start_time = Time.now
 
         @tcp_client.send( "#{request}",0 )
@@ -66,7 +65,7 @@ class BWControl < BWOci
                     build_xml(y,val)
                 end
             elsif val.is_a?(Array)
-                val.each {|ele| x.tag! key,ele}
+                val.each {|ele| build_xml(x,{key => ele})}
             else
                 x.tag! key,val
             end
