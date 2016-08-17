@@ -27,7 +27,7 @@ class BWControl < BWOci
         @debug_time = debug_time
         @helpers = Helpers.new
         @session_id = get_session_id
-        get_logged_in(user,pass)
+        get_logged_in(user,pass,server)
 
     end
 
@@ -268,10 +268,15 @@ class BWControl < BWOci
     end
 
     # Get Logged in
-    def get_logged_in(user,pass)
+    def get_logged_in(user,pass,server)
         is_logged_in = login(user,pass)
         abort "Login Failed" if is_logged_in == false
-        puts "Login Successful"
+        puts "Login Successful - #{server}"
+        if server =~ /networkphoneasp.com/
+            puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+            puts "!!!CONNECTED TO PRODUCTION!!!"
+            puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        end
 
     end
 
