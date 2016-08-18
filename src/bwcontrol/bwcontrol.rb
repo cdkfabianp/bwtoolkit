@@ -61,9 +61,14 @@ class BWControl < BWOci
         abort "Element: #{hash} is not of type Hash" if hash.is_a?(Hash) == false
         hash.each do |key,val|
             if val.is_a?(Hash)
-                x.tag! key do |y|
-                    build_xml(y,val)
+                # Build Attributes if Hash contains :attr
+                if val.has_key?(:attr)
+                    val[:attr].each  {|att_key,att_val| x.tag! key, att_key => att_val}
+                else
+                    x.tag! key do |y|                        
+                        build_xml(y,val)
                 end
+            end
             elsif val.is_a?(Array)
                 val.each {|ele| build_xml(x,{key => ele})}
             else
