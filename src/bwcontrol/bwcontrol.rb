@@ -31,17 +31,21 @@ class BWControl < BWOci
 
     end
 
-    def send_request(oci_cmd, config_hash)
+    def send_request(oci_cmd, config_hash, ok_to_send=true)
         request = build_request(oci_cmd,config_hash)
         print_response(request) if @debug_verbose
         start_time = Time.now
 
-        @tcp_client.send( "#{request}",0 )
-        response,cmd_ok = get_response
+        response = ""
+        cmd_ok = "AUDIT_ONLY"
+        if ok_to_send
+            @tcp_client.send( "#{request}",0 )
+            response,cmd_ok = get_response
+            
+            end_time = Time.now
+            puts "OCI: #{args} #{end_time - start_time}" if @debug_time == true
+        end
         
-        end_time = Time.now
-        puts "OCI: #{args} #{end_time - start_time}" if @debug_time == true
-
         return response,cmd_ok
     end
 
