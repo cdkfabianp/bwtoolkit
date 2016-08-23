@@ -252,7 +252,6 @@ class BWUser < BWControl
     	return cmd_ok,response
     end
 
-
 	def mod_user_profile(user_mod_hash=nil)
 		oci_cmd = :UserModifyRequest17sp4
 		config_hash = send(oci_cmd)
@@ -270,6 +269,19 @@ class BWUser < BWControl
 
 	 	return cmd_ok,response
 	end
+
+    def mod_user_remove_tn(user=nil,ok_to_send=true)
+        oci_cmd = :UserModifyRequest17sp4
+        config_hash = {
+            userId: user,
+            phoneNumber: {attr: {'xsi:nil' => "true"}}
+        }
+
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+        response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
+
+        return cmd_ok,response
+    end
 
     def get_user_rec_config(user)
         oci_cmd = :UserBroadWorksReceptionistEnterpriseGetRequest
