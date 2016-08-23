@@ -70,6 +70,15 @@ def tn_list
     t.group_tn_list($options[:ent],$options[:group])
 end
 
+def tn_port_out
+	require_relative 'src/tnPortOut'
+	port = TNPortOut.new
+
+	tn_list = $bw_helper.get_array_from_file($options[:file])
+	port.remove(tn_list)
+end
+
+
 def audit_service_pack
 	require_relative 'src/auditLicensePack'
 	a = AuditServicePack.new($options[:user_type],$options[:sp])

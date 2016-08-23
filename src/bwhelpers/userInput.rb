@@ -28,6 +28,7 @@ class UserInput
                 find_ent_group:                 Search for all entIds and groupIds that match string value              
                 find_tn:                        Search system for TN and return configured Enterprise/Group/User/Activation status
                 tn_list:                        List all TNs assigned to group
+                tn_port_out:                    Remove ported-out numbers from Broadworks
                 reg_stats:                      Find all active devices in group based on registrations status and users assigend to device
                 config_ucone:                   Configure specified users for UCOne
                 audit_messaging:                Find all users assigned messaging and whether the service can be removed
@@ -145,6 +146,15 @@ class UserInput
         opts.on("-g", "--group GROUP", "Specify group to retrieve TN List from") {|v| options[:group] = v}
         return opts,options
     end
+
+    def tn_port_out(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-r", "--remove REMOVE", "[true|false] Set to true to remove TNs from Broadworks.  False to run audit") {|v| options[:remove] = v}
+        opts.on("-f", "--file FILE", "Specify file with list of TNs to remove (One tn per line)") {|v| options[:file] = v}
+
+        return opts,options
+    end
+
 
     def get_user_list_w_alt_nums(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
