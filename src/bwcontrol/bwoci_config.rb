@@ -67,9 +67,9 @@ class BWOci < OCIComponents
     def GroupAutoAttendantModifyInstanceRequest20(svc_id=nil,tn=nil,ext=nil,aliasList=nil,publicId=nil)
     	config_hash = {
     		serviceUserId: svc_id,
-    		serviceInstanceProfile: send(:serviceInstanceProfile(tn,ext,aliasList,publicId)) 
-    		}
-    	}
+    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId) 
+		}
+    end
 
     def GroupCallProcessingGetPolicyRequest17sp4
     	config_hash = {
