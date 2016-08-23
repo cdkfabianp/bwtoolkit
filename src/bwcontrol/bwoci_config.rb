@@ -64,6 +64,13 @@ class BWOci < OCIComponents
     	}
     end
 
+    def GroupAutoAttendantModifyInstanceRequest20(svc_id=nil,tn=nil,ext=nil,aliasList=nil,publicId=nil)
+    	config_hash = {
+    		serviceUserId: svc_id,
+    		serviceInstanceProfile: send(:serviceInstanceProfile(tn,ext,aliasList,publicId)) 
+    		}
+    	}
+
     def GroupCallProcessingGetPolicyRequest17sp4
     	config_hash = {
 			serviceProviderId: nil,
@@ -140,6 +147,14 @@ class BWOci < OCIComponents
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
 #
+	def GroupDnUnassignListRequest(ent=nil,group=nil,tn_list=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			phoneNumber: tn_list
+		}
+	end
+
 	def GroupDomainGetAssignedListRequest
 		config_hash = {
 			serviceProviderId: nil,
