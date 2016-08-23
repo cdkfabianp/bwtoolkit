@@ -25,6 +25,13 @@ class BWHelpers
 		return assigned_users
 	end
 
+	def get_array_from_file(file_name)
+		tn_list = Array.new
+		File.exist?(file_name) ?  File.readlines(file_name).each {|line| tn_list.push(line.chomp)} : tn_list.push(file_name)
+
+		return tn_list
+	end
+
 	def get_hash_from_file(file_name,std_list)
 		user_list = Hash.new(Array.new)
 		
