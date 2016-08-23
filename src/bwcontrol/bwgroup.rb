@@ -226,6 +226,16 @@ class BWGroup < BWUser
         return cmd_ok,response
     end    
 
+    def mod_aa_dn_unassign_dn(svc_id)
+        oci_cmd = :GroupAutoAttendantModifyInstanceRequest20
+        config_hash = send(oci_cmd)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
+    end
+
     def mod_group_announcement_file(ent=nil,group=nil,file=nil,new_file=nil,type=nil)
         oci_cmd = :GroupAnnouncementFileModifyRequest
         config_hash = send(oci_cmd)
@@ -238,6 +248,16 @@ class BWGroup < BWUser
         abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if group == nil
 
         response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
+    end
+
+    def mod_group_unassign_dn(ent=nil,group=nil,tn_list=nil,ok_to_mod=true)
+        oci_cmd = :GroupDnUnassignListRequest
+        config_hash = send(oci_cmd,ent,group,tn_list)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_mod)
 
         return cmd_ok,response
     end
