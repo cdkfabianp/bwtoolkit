@@ -25,4 +25,13 @@ class OCIComponents
 		}
 	end
 
+	def serviceInstanceProfile(tn=nil,ext=nil,aliasList=nil,publicId=nil)
+		config_hash = {
+			phoneNumber: tn,
+			extension: ext,
+			sipAliasList: aliasList,
+			publicUserIdentity: publicId
+		}
+	end
+
 end
