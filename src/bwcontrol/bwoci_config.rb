@@ -217,6 +217,13 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def GroupHuntGroupModifyInstanceRequest(svc_id=nil,tn=nil,ext=nil,aliasList=nil,publicId=nil)
+    	config_hash = {
+    		serviceUserId: svc_id,
+    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId) 
+		}
+    end
+
 	def ServiceProviderAdminGetListRequest14(ent=nil)
 		config_hash = {
 			serviceProviderId: ent
