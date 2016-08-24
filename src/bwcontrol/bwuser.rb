@@ -127,6 +127,21 @@ class BWUser < BWControl
 
     end
 
+    def get_user_tn_assignment(tn,user)
+        cmd_ok,alt_num_info = get_user_alternate_numbers(user)
+        entrys = alt_num_info.keys
+        found_tn = "address"
+        entrys.each do |e|
+            if e.to_s =~ /alternateEntry\d\d/
+                if alt_num_info[e].has_key?(:phoneNumber)
+                    found_tn = e if alt_num_info[e][:phoneNumber] == tn
+                end
+            end
+        end
+        return found_tn
+    end
+
+
     def get_user_clean_svc_list(user=nil)
         svc_list = Array.new
         cmd_ok,response_hash = $bw.get_user_svc_list(user)
