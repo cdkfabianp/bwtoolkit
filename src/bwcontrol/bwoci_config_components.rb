@@ -2,6 +2,24 @@
 
 class OCIComponents
 
+	def alternate_entry
+		config_hash = {
+				phoneNumber: nil,
+				extension: nil,
+				ringPattern: nil
+		}
+	end
+
+	def huntPolicy
+		config_hash = {
+		}
+	end
+
+	def networkClassOfService
+		config_hash = {
+
+		}
+	end
 
 	def searchCriteriaUserId(value=nil)
 		config_hash = {
