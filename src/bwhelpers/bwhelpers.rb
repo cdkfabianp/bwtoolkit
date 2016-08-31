@@ -78,7 +78,20 @@ class BWHelpers
 
 		license_hash = JSON.parse(json_data, :symbolize_names => true)   
         return license_hash	
-	end	
+	end
+
+	def mod_config_hash(config_hash,user_mod_hash)
+		config_hash.keep_if do |k|
+			is_true = false
+			if user_mod_hash.has_key?(k)
+				config_hash[k] = user_mod_hash[k]
+				is_true = true
+			end
+			is_true
+		end
+
+		return config_hash
+	end
 	
 	def valid_user_types
 		return ["Hosted_User", "Trunk_User", "Virtual_User", "None"]	
