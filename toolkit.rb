@@ -75,7 +75,14 @@ def tn_port_out
 	port = TNPortOut.new
 
 	tn_list = $bw_helper.get_array_from_file($options[:file])
-	port.remove(tn_list)
+	if $options[:remove] == "true"
+		# Remove TNs
+		port.get_values(tn_list) {|cmd,config_hash| port.send(cmd, config_hash)}
+	else
+		# Print list of results of which tns will be removed
+		port.get_values(tn_list) {|cmd,config_hash| puts "#{config_hash}" }
+
+	end
 end
 
 
