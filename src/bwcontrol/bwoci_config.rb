@@ -67,8 +67,19 @@ class BWOci < OCIComponents
     def GroupAutoAttendantModifyInstanceRequest20(svc_id=nil,tn=nil,ext=nil,aliasList=nil,publicId=nil)
     	config_hash = {
     		serviceUserId: svc_id,
-    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId) 
-		}
+    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId),
+				firstDigitTimeoutSeconds: nil,
+				enableVideo: nil,
+				businessHours: nil,
+				holidaySchedule: nil,
+				extensionDialingScope: nil,
+				nameDialingScope: nil,
+				nameDialingEntries: nil,
+				businessHoursMenu: nil,
+				afterHoursMenu: nil,
+				holidayMenu: nil,
+				networkClassOfService: nil,
+			}
     end
 
     def GroupCallProcessingGetPolicyRequest17sp4
@@ -220,7 +231,24 @@ class BWOci < OCIComponents
 	def GroupHuntGroupModifyInstanceRequest(svc_id=nil,tn=nil,ext=nil,aliasList=nil,publicId=nil)
     	config_hash = {
     		serviceUserId: svc_id,
-    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId) 
+    		serviceInstanceProfile: send(:serviceInstanceProfile,tn,ext,aliasList,publicId),
+				policy: nil,
+				huntAfterNoAnswer: nil,
+				noAnswerNumberOfRings: nil,
+				forwardAfterTimeout: nil,
+				forwardTimeoutSeconds: nil,
+				forwardToPhoneNumber: nil,
+				agentUserIdList: nil,
+				allowCallWaitingForAgents: nil,
+				useSystemHuntGroupCLIDSetting: nil,
+				includeHuntGroupNameInCLID: nil,
+				enableNotReachableForwarding: nil,
+				notReachableForwardToPhoneNumber: nil,
+				makeBusyWhenNotReachable: nil,
+				allowMembersToControlGroupBusy: nil,
+				enableGroupBusy: nil,
+				applyGroupBusyWhenTerminatingToAgent: nil,
+				networkClassOfService: nil,
 		}
     end
 
@@ -259,6 +287,24 @@ class BWOci < OCIComponents
 		config_hash = {
 			userId: user
 		}
+	end
+
+	def UserAlternateNumbersModifyRequest()
+		config_hash = {
+				userId: nil,
+				distinctiveRing: nil,
+				alternateEntry01: alternate_entry,
+				alternateEntry02: alternate_entry,
+				alternateEntry03: alternate_entry,
+				alternateEntry04: alternate_entry,
+				alternateEntry05: alternate_entry,
+				alternateEntry06: alternate_entry,
+				alternateEntry07: alternate_entry,
+				alternateEntry08: alternate_entry,
+				alternateEntry09: alternate_entry,
+				alternateEntry10: alternate_entry,
+		}
+
 	end
 
 	def UserAnnouncementFileGetListRequest
