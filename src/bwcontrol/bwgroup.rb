@@ -226,12 +226,13 @@ class BWGroup < BWUser
         return cmd_ok,response
     end    
 
-    def mod_aa_dn_unassign_dn(svc_id)
+    def mod_group_aa_profile(svc_mod_hash,ok_to_send=true)
         oci_cmd = :GroupAutoAttendantModifyInstanceRequest20
-        config_hash = send(oci_cmd)
-        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id == nil
+        config_template = send(oci_cmd)
+        config_hash = $bw_helper.mod_config_hash(config_template,svc_mod_hash)
 
-        response,cmd_ok = send_request(oci_cmd,config_hash)
+        # config_hash[:serviceInstanceProfile][:phoneNumber] = {attr: {'xsi:nil' => "true"}}
+        response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
 
         return cmd_ok,response
     end
@@ -250,6 +251,16 @@ class BWGroup < BWUser
         response,cmd_ok = send_request(oci_cmd,config_hash)
 
         return cmd_ok,response
+    end
+
+    def mod_group_hg_profile(svc_mod_hash,ok_to_send=true)
+        oci_cmd = :GroupHuntGroupModifyInstanceRequest
+        config_template = send(oci_cmd)
+        config_hash = $bw_helper.mod_config_hash(config_template,svc_mod_hash)
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+      return cmd_ok,response
     end
 
     def mod_group_unassign_dn(ent=nil,group=nil,tn_list=nil,ok_to_mod=true)
