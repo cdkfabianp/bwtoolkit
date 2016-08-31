@@ -202,6 +202,16 @@ class BWUser < BWControl
         return vm_is_on,vm_is_configured
     end
 
+    def mod_user_alt_num(user_mod_hash=nil,ok_to_send=true)
+      oci_cmd = :UserAlternateNumbersModifyRequest
+      config_template = send(oci_cmd)
+      config_hash = mod_user_config(config_template,user_mod_hash)
+
+      response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
+      return cmd_ok,response
+
+    end
+
     def mod_user_announcement_file(user=nil,file=nil,new_file=nil,type=nil)
         oci_cmd = :UserAnnouncementFileModifyRequest
         config_hash = send(oci_cmd)
@@ -237,6 +247,19 @@ class BWUser < BWControl
     	# return final_cmd_ok,final_response
     end
 
+    def mod_user_config(config_hash,user_mod_hash)
+      config_hash.keep_if do |k|
+        is_true = false
+        if user_mod_hash.has_key?(k)
+          config_hash[k] = user_mod_hash[k]
+          is_true = true
+        end
+        is_true
+      end
+
+      return config_hash
+    end
+
     def mod_user_cpp(user_mod_hash=nil)
     	oci_cmd = :UserCallProcessingModifyPolicyRequest14sp7
     	config_hash = send(oci_cmd)
@@ -267,36 +290,37 @@ class BWUser < BWControl
     	return cmd_ok,response
     end
 
-	def mod_user_profile(user_mod_hash=nil)
-		oci_cmd = :UserModifyRequest17sp4
-		config_hash = send(oci_cmd)
-		abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user_mod_hash[:userId] == nil
-		
-		config_hash.keep_if do |k|
-			is_true = false
-			if user_mod_hash.has_key?(k)
-				config_hash[k] = user_mod_hash[k]
-				is_true = true
-			end
-			is_true
-		end
-	 	response,cmd_ok = send_request(oci_cmd,config_hash)
+    def mod_user_profile(user_mod_hash=nil,ok_to_send=true)
+      oci_cmd = :UserModifyRequest17sp4
+      config_hash = send(oci_cmd)
+      abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user_mod_hash[:userId] == nil
 
-	 	return cmd_ok,response
-	end
+      config_hash.keep_if do |k|
+        is_true = false
+        if user_mod_hash.has_key?(k)
+          config_hash[k] = user_mod_hash[k]
+          is_true = true
+        end
+        is_true
+      end
+      response,cmd_ok = send_request(oci_cmd,config_hash)
 
-    def mod_user_remove_tn(user=nil,ok_to_send=true)
-        oci_cmd = :UserModifyRequest17sp4
-        config_hash = {
-            userId: user,
-            phoneNumber: {attr: {'xsi:nil' => "true"}}
-        }
-
-        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
-        response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
-
-        return cmd_ok,response
+      return cmd_ok,response
     end
+
+
+    # def mod_user_remove_tn(user=nil,ok_to_send=true)
+    #     oci_cmd = :UserModifyRequest17sp4
+    #     config_hash = {
+    #         userId: user,
+    #         phoneNumber: {attr: {'xsi:nil' => "true"}}
+    #     }
+    #
+    #     abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+    #     response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
+    #
+    #     return cmd_ok,response
+    # end
 
     def get_user_rec_config(user)
         oci_cmd = :UserBroadWorksReceptionistEnterpriseGetRequest
@@ -331,39 +355,39 @@ class BWUser < BWControl
         return cmd_ok,response
     end
 
-	def mod_user_sca_ep(user=nil,device=nil,lineport=nil)
-		oci_cmd = :UserSharedCallAppearanceAddEndpointRequest14sp2
-		config_hash = send(oci_cmd)
-		abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+    def mod_user_sca_ep(user=nil,device=nil,lineport=nil)
+      oci_cmd = :UserSharedCallAppearanceAddEndpointRequest14sp2
+      config_hash = send(oci_cmd)
+      abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
 
-		config_hash[:userId] = user
-        config_hash[:accessDeviceEndpoint][:accessDevice][:deviceName] = device
-        config_hash[:accessDeviceEndpoint][:linePort] = lineport
+      config_hash[:userId] = user
+          config_hash[:accessDeviceEndpoint][:accessDevice][:deviceName] = device
+          config_hash[:accessDeviceEndpoint][:linePort] = lineport
 
-        response,cmd_ok = send_request(oci_cmd,config_hash)
+          response,cmd_ok = send_request(oci_cmd,config_hash)
 
-		return cmd_ok,response
-	end
+      return cmd_ok,response
+    end
 
-	def mod_user_sca_settings(use_defaults,user=nil,user_mod_hash=nil)
-		oci_cmd = :UserSharedCallAppearanceModifyRequest
-		config_hash = send(oci_cmd)
-		abort "#{__method__} for #{oci_cmd} Default Options #{config_hash}" if user == nil
+    def mod_user_sca_settings(use_defaults,user=nil,user_mod_hash=nil)
+      oci_cmd = :UserSharedCallAppearanceModifyRequest
+      config_hash = send(oci_cmd)
+      abort "#{__method__} for #{oci_cmd} Default Options #{config_hash}" if user == nil
 
-		config_hash[:userId] = user
-		if use_defaults == false
-			config_hash.keep_if do |k|
-				is_true = false
-				if user_mod_hash.has_key?(k)
-					config_hash[k] = user_mod_hash[k]
-					is_true = true
-				end
-				is_true
-			end
-		end
-	 	response,cmd_ok = send_request(oci_cmd,config_hash)
+      config_hash[:userId] = user
+      if use_defaults == false
+        config_hash.keep_if do |k|
+          is_true = false
+          if user_mod_hash.has_key?(k)
+            config_hash[k] = user_mod_hash[k]
+            is_true = true
+          end
+          is_true
+        end
+      end
+      response,cmd_ok = send_request(oci_cmd,config_hash)
 
-	 	return cmd_ok,response		
- 	end
+      return cmd_ok,response
+    end
 
 end
