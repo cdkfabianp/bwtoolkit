@@ -34,15 +34,26 @@ class GroupToProductMapping
 	        group_name,group_addr,product_type = get_profile_info(ent,group)
 	        ent_info[:group_info] = {group_id: group, group_name: group_name, group_addr: group_addr, product_type: product_type}
 
-			my_values = print_ent_info(ent_info)
-			counter = 0
-			my_values.each do |value|
-				print "\"#{value}\""
-				print "," unless counter == my_values.length - 1
-				print "\n" if counter == my_values.length - 1
-				counter += 1
+			my_values = Array.new
+			if $options[:orca] == "true"
+				my_values = print_orca_info(ent_info)
+			else
+				#Ugly stuff to print out CSV lines with values in quotes ""
+				#Used originally to populate SNAP Customer Data Spreadsheet
+				my_values = print_ent_info(ent_info)
+				counter = 0
+				my_values.each do |value|
+					print "\"#{value}\""
+					print "," unless counter == my_values.length - 1
+					print "\n" if counter == my_values.length - 1
+					counter += 1
+				end
 			end
 		end
+	end
+
+	def print_orca_info(ent_info)
+		ent_info.each {|k,v| puts "\"#{v[:group_id]}\"|\"#{v[:group_name]}\"|\"#{v[:product_type]}\"" if k == :group_info}
 	end
 
 	def print_ent_info(ent_info,my_values=Array.new)

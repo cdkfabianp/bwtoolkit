@@ -116,6 +116,7 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        opts.on("-o", "--orca ORCAWAVE INFO", "Print specific details to import into ORCAWAVE") { |v| options[:orca] = v}
         opts.on("-v", "--verbose VERBOSE INFO", "Get additional enterprise and group detail") { |v| options[:verbose] = v}
 
         return opts,options
