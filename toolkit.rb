@@ -14,7 +14,7 @@ def bwtest
 	require_relative 'src/bwtest'
 
 	t = BWTest.new
-	t.get_hg_config
+	t.print_group_list_of_ents($options[:user])
 end
 
 # Configure specified users in group for UCOne
@@ -112,7 +112,12 @@ def audio_repo
 	require_relative 'src/auditAnnouncementRepo'
 
 	a = AuditAnnouncementRepo.new
-	a.update_name_with_slash($options[:ent],$options[:group])
+	if $options.has_key?(:file) && File.exists?($options[:file])
+		a.bulk_update_groups
+	else
+		a.update_name_with_slash($options[:ent],$options[:group])
+	end
+
 
 end
 
