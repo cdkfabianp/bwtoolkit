@@ -13,6 +13,7 @@ class FindEntGroups
 		type = nil
 		if ent_groups.has_key?(@search_string)
 			cmd_ok,response_hash = $bw.get_ent_profile(@search_string)
+			response_hash[:group_list] = ent_groups[@search_string]
 			puts response_hash
 			name = response_hash[:serviceProviderName]
 			type = 'EnterpriseId'
