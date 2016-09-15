@@ -85,7 +85,10 @@ class BWUser < BWControl
         table_header = "userTable"
 
         table_of_users,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
-        table_of_users.each { |user_hash| users << user_hash[:User_Id] }
+        if table_of_users.is_a?(Array)
+          table_of_users.each { |user_hash| users << user_hash[:User_Id] }
+        end
+
 
         return cmd_ok,users
     end   
@@ -108,8 +111,9 @@ class BWUser < BWControl
         cmd_ok,response_hash = get_ent_service_list(ent)
 
         users = Array.new
-        response_hash.each { |user_info| users.push(user_info[:User_ID]) if user_info[:Group_ID] == group}
-
+        if response_hash.is_a?(Array)
+          response_hash.each { |user_info| users.push(user_info[:User_ID]) if user_info[:Group_ID] == group}
+        end
         return cmd_ok,users
 
     end
