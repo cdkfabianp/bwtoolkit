@@ -61,6 +61,7 @@ class UserInput
     def audio_repo(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group") { |v| options[:group] = v}
+        opts.on("-f", "--file FILE", "[optional] Specify list of groups to audit") { |v| options[:file] = v}
 
         return opts,options
     end
