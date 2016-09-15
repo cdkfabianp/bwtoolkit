@@ -1,5 +1,14 @@
 class BWTest
 
+    def print_group_list_of_ents(ent_list)
+      ents = $bw_helper.get_array_from_file(ent_list)
+      ents.each do |ent|
+        # puts "ENT: #{ent}"
+        cmd_ok,group_list = $bw.get_groups(ent)
+        puts group_list
+      end
+    end
+
   	def get_svc_list
   		user = 'peteGRP-user002'
   		cmd_ok,response = $bw.get_user_svc_list(user)
