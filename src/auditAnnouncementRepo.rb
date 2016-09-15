@@ -1,5 +1,15 @@
 class AuditAnnouncementRepo
 
+  def bulk_update_groups
+		groups = $bw_helper.get_array_from_file($options[:file])
+		groups.each do |group|
+			ent = $bw.get_ent_by_group_id(group)
+			puts "Checking #{ent} / #{group}"
+			update_name_with_slash(ent,group)
+		end
+
+	end
+
 	def update_name_with_slash(ent,group)
 
 		#Check Group Audio Repository for files with Name that contains backslashes "\"
