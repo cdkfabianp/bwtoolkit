@@ -1,6 +1,13 @@
+# Project Specific
+.idea/
 conf/bw_sys.conf
 conf/service_pack.conf
 conf/eis_sys.conf
+src/stand-alone/
+src/.DS_Store
+tmp*
+
+# Default Ignore
 *.gem
 *.rbc
 /.config
@@ -12,5 +19,4 @@ conf/eis_sys.conf
 /test/tmp/
 /test/version_tmp/
 /tmp/
-src/stand-alone/
-src/.DS_Store
+
