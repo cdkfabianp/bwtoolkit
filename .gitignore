@@ -1,5 +1,6 @@
 conf/bw_sys.conf
 conf/service_pack.conf
+conf/eis_sys.conf
 *.gem
 *.rbc
 /.config
@@ -11,4 +12,5 @@ conf/service_pack.conf
 /test/tmp/
 /test/version_tmp/
 /tmp/
-
+src/stand-alone/
+src/.DS_Store
