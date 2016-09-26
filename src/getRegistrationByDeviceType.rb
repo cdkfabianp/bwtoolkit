@@ -46,16 +46,16 @@ class GetRegByDeviceType
 
 				cmd_ok, user_ids = $bw.get_users_assigned_to_device(ent,group,dev_name)
 				user_ids.each do |user|
-				#Skip User Reg Lookup if we have already found the Device Info
-				next if ua_device_list.has_key?(device_list[:MAC_Address])
+					#Skip User Reg Lookup if we have already found the Device Info
+					next if ua_device_list.has_key?(device_list[:MAC_Address])
 
-				cmd_ok,user_reg = $bw.get_user_register_status(user)
-				user_reg.each do |line_reg|
-						dev_type,dev_ver,dev_mac = parse_ua(line_reg[:User_Agent])
+					cmd_ok,user_reg = $bw.get_user_register_status(user)
+					user_reg.each do |line_reg|
+							dev_type,dev_ver,dev_mac = parse_ua(line_reg[:User_Agent])
 
-						#Insert configured MAC if MAC doesn't exist within User-Agent string
-						dev_mac = device_list[:MAC_Address] unless dev_mac
-						ua_device_list[dev_mac] = [dev_type,dev_ver,config_type]
+							#Insert configured MAC if MAC doesn't exist within User-Agent string
+							dev_mac = device_list[:MAC_Address] unless dev_mac
+							ua_device_list[dev_mac] = [dev_type,dev_ver,config_type]
 					end
 				end
 	    end
