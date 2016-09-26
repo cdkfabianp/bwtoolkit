@@ -105,9 +105,10 @@ class UserInput
     end
 
     def get_ent_info(opts,options)
-        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP|-a ALL] [options]"
         opts.on("-x", "--cmd CMD", "Audit command to run to query user") {|v| options[:sub_cmd] = v}
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-e", "--ent ENTERPRISE", "[optional] Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
         return opts,options
     end
