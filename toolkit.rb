@@ -146,10 +146,19 @@ def get_ent_info
 
 	a = GetEntInfo.new
 
-	ent_groups = $bw_helper.get_groups_to_query
-	ent_groups.each do |ent,group_list|
-		a.get_ent_info($options[:sub_cmd],{ent: ent, group: group_list})
+	query = {ent: nil, group: Array.new}
+	if $options[:sub_cmd] == 'get_ent_status'
+		abort "#{__method_} -x #{$options[:sub_cmd]} required -e ENTERPRISE to be specified}" unless $options.has_key?(:ent)
+		query[:ent] = $options[:ent]
+		puts "my query: #{query} and my ent: #{$options[:ent]}"
+	else
+		ent_groups = $bw_helper.get_groups_to_query
+		ent_groups.each do |ent,group_list|
+			query = {ent: ent, group: group_list}
+		end
 	end
+
+	a.get_ent_info($options[:sub_cmd],query)
 
 	puts "My admin tracker"
 	$admin_list.each do |ent,info|
@@ -222,7 +231,13 @@ if $options.has_key?(:group)
 	if $options[:ent] =~ /Could not find group:/
 		puts "Could not find group: #{$options[:group]} in system"
 		abort
-	end
+  end
+# Set group to nil if not provided
+elsif
+  $options.has_key?(:ent)
+  $options[:group] = nil
+
+# Set both ent and group to nil if neither provided
 else
 	$options[:ent] = nil
 	$options[:group] = nil
