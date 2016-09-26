@@ -264,6 +264,12 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def ServiceProviderDnGetSummaryListRequest(ent=nil)
+		config_hash = {
+				serviceProviderId: ent
+		}
+	end
+
 	def ServiceProviderGetListRequest
 		config_hash = {
 			isEnterprise: true
