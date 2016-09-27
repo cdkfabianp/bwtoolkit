@@ -1,7 +1,8 @@
 class ValidateEnterprise
 
   def validate_ent(ent_list)
-    
+    puts "#{__method__}: Get info to determine if enterprise is active or not"
+
     status_hash = Hash.new(Hash.new)
     ent_list.each do |ent|
       ent_status = get_ent_status(ent)
@@ -12,7 +13,6 @@ class ValidateEnterprise
   end
 
   def get_ent_status(ent)
-    puts "#{__method__}: Get info to determine if enterprise is active or not"
     groups,group_count = get_group_count(ent)
     active_tn_count = 0
     phy_device_count = 0

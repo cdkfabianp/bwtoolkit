@@ -147,16 +147,10 @@ def get_ent_info
 	a = GetEntInfo.new
 
 	query = {ent: nil, group: Array.new}
-	if $options[:sub_cmd] == 'get_ent_status'
-		abort "#{__method_} -x #{$options[:sub_cmd]} required -e ENTERPRISE to be specified}" unless $options.has_key?(:ent)
-		query[:ent] = $options[:ent]
-		puts "my query: #{query} and my ent: #{$options[:ent]}"
-	else
-		ent_groups = $bw_helper.get_groups_to_query
-		ent_groups.each do |ent,group_list|
-			query = {ent: ent, group: group_list}
-		end
-	end
+  ent_groups = $bw_helper.get_groups_to_query
+  ent_groups.each do |ent,group_list|
+    query = {ent: ent, group: group_list}
+  end
 
 	a.get_ent_info($options[:sub_cmd],query)
 
