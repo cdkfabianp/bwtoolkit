@@ -41,6 +41,7 @@ class UserInput
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
                 get_user_profile:               Print specified atributes of USER from User Profile
                 mod_user_config:                Modify basic user configuration
+                validate_ent:                   Validate that specified Enterprise is valid in the system (likelness that is is in use)
         "
         abort
     end
@@ -113,7 +114,6 @@ class UserInput
         return opts,options
     end
 
-
     def get_group_to_product_mapping(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
@@ -182,6 +182,15 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
         opts.on("-u", "--user USER", "User or List of Users to modify in the system") {|v| options[:user] = v}   
         opts.on("-x", "--cmd CMD", "Script command to run to modify user") {|v| options[:sub_cmd] = v}
+        return opts,options
+    end
+
+    def validate_ent(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP|-a ALL] [options]"
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all enterprises") { |v| options[:group] = v}
+        opts.on("-e", "--ent ENTERPRISE", "[optional] Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
+        opts.on("-f", "--file FILE", "List of Enterprises to audit in the system") {|v| options[:file] = v}
+        opts.on("-a", "--all ALL_ENTS", "Specify All Enterprises") { |v| options[:all_groups] = true}
         return opts,options
     end
 

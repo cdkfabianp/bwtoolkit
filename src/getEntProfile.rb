@@ -23,6 +23,7 @@ class GetEntInfo
 
 	def get_ent_info(sub_cmd,ele)
 		@ele = ele
+		puts "My @ele: #{@ele}"
 		send(sub_cmd)
 	end
 

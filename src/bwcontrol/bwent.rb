@@ -58,6 +58,17 @@ class BWEnt < BWGroup
         return cmd_ok,response_hash
     end
 
+    def get_ent_endpoint_info(ent=nil)
+        oci_cmd = :ServiceProviderEndpointGetListRequest
+        config_hash = send(oci_cmd,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = "endpointTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
     def get_ent_profile(ent=nil)
         oci_cmd = :ServiceProviderGetRequest17sp1
         config_hash = send(oci_cmd,ent)

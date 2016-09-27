@@ -216,6 +216,19 @@ def mod_user_config
 	u.modify_user($options[:user],$options[:sub_cmd])
 end
 
+def validate_ent
+	require_relative 'src/validateEnterprise'
+	e = ValidateEnterprise.new
+
+	ent_list = Array.new
+	if $options.has_key?(:file) &&
+		ent_list = $bw_helper.get_array_from_file($options[:file])
+	elsif $options.has_key?(:ent)
+		ent_list.push($options[:ent])
+	end
+	e.validate_ent(ent_list)
+
+end
 
 
 # Initialize Global Variables
