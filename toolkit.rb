@@ -146,21 +146,15 @@ def get_ent_info
 
 	a = GetEntInfo.new
 
-	query = {ent: nil, group: Array.new}
-  ent_groups = $bw_helper.get_groups_to_query
-  ent_groups.each do |ent,group_list|
-    query = {ent: ent, group: group_list}
-  end
+	# query = {ent: nil, group: Array.new}
+ #  	ent_groups = $bw_helper.get_groups_to_query
+ #  	ent_groups.each do |ent,group_list|
+ #    	query = {ent: ent, group: group_list}
+ #  	end
 
-	a.get_ent_info($options[:sub_cmd],query)
+	a.get_ent_info($options[:sub_cmd])
 
-	puts "My admin tracker"
-	$admin_list.each do |ent,info|
-		puts "\"ENT\",\"#{ent}\",\"#{info[:ent_name]}\",\"\",\"\",\"\",\"#{info[:ent_admin]}\""
-		info[:groups].each do |group|
-			puts "\"GROUP\",\"#{ent}\",\"\",\"#{group[:group]}\",\"#{group[:group_name]}\",\"#{group[:product]}\",\"#{group[:group_admin]}\""
-		end
-	end
+
 end
 
 
