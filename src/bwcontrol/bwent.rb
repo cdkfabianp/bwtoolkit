@@ -30,21 +30,21 @@ class BWEnt < BWGroup
 		oci_cmd = :GroupGetListInSystemRequest
 		config_hash = GroupGetListInSystemRequest()
 		config_hash[:searchCriteriaGroupId][:value] = group
-    table_header = 'groupTable'
+        table_header = 'groupTable'
 
-    # ents = Array.new
-    response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        # ents = Array.new
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
 
-    ent = "Could not find group: #{group} in system.  Group must be exact match (case INsensitive) for existing group in system"
-    if response_hash.is_a?(Array)
-        if response_hash[0].has_key?(:Organization_Id)
-            ent = response_hash[0][:Organization_Id]
-        else
-            ent = "Could not get Enterprise ID from: #{group}"
+        ent = "Could not find group: #{group} in system.  Group must be exact match (case INsensitive) for existing group in system"
+        if response_hash.is_a?(Array)
+            if response_hash[0].has_key?(:Organization_Id)
+                ent = response_hash[0][:Organization_Id]
+            else
+                ent = "Could not get Enterprise ID from: #{group}"
+            end
         end
-    end
 
-    return ent
+        return ent
     end
 
     def get_ent_dn_info(ent=nil)
