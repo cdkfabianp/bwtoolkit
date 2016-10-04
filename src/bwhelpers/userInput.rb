@@ -111,6 +111,7 @@ class UserInput
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
         opts.on("-e", "--ent ENTERPRISE", "[optional] Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
+        opts.on("-f", "--file FILE", "Specify file with list of Enterprises to query") {|v| options[:file] = v}        
         return opts,options
     end
 
