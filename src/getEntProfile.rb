@@ -47,7 +47,7 @@ class GetEntInfo
 
 	def get_basic_info(ent)
 		name,product_type = get_profile_info(ent)
-		puts "My ENT: #{ent}, and NAME: #{name}"
+		puts "#{ent},#{name}"
 
 	end
 
