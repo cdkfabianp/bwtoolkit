@@ -9,7 +9,9 @@ class BWGroup < BWUser
         groups = Array.new
         table_header = "groupTable"
         response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
-        response_hash.each { |group_hash| groups << group_hash[:Group_Id] }
+        if response_hash.is_a?(Array)
+            response_hash.each { |group_hash| groups << group_hash[:Group_Id] }
+        end
 
         return cmd_ok,groups
     end

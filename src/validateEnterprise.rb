@@ -39,7 +39,7 @@ class ValidateEnterprise
     # Get Total Groups Configured
     group_count = 0
     cmd_ok,groups = $bw.get_groups(ent)
-
+    
     return groups,groups.length
   end
 
