@@ -255,6 +255,18 @@ class BWGroup < BWUser
         return cmd_ok,response
     end
 
+    def mod_group_intercept(ent=nil,group=nil,is_active)
+        oci_cmd = :GroupInterceptGroupModifyRequest16
+        config_template = send(oci_cmd)
+        config_hash = $bw_helper.mod_config_hash(config_template,{serviceProviderId: ent,
+            groupId: group,
+            isActive: is_active}
+            )
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
+    end
+
     def mod_group_hg_profile(svc_mod_hash,ok_to_send=true)
         oci_cmd = :GroupHuntGroupModifyInstanceRequest
         config_template = send(oci_cmd)

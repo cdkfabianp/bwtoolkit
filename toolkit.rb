@@ -14,7 +14,8 @@ def bwtest
 	require_relative 'src/bwtest'
 
 	t = BWTest.new
-	t.print_group_list_of_ents($options[:user])
+	# t.print_group_list_of_ents($options[:user])
+	t.active_group_intercept
 end
 
 # Configure specified users in group for UCOne

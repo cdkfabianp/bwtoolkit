@@ -215,6 +215,27 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def GroupInterceptGroupModifyRequest16(ent=nil,group=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			isActive: nil,
+			announcementSelection: nil,
+			audioFile: nil,
+			videoFile: nil,
+			playNewPhoneNumber: nil,
+			newPhoneNumber: nil,
+			transferOnZeroToPhoneNumber: nil,
+			transferPhoneNumber: nil,
+			rerouteOutboundCalls: nil,
+			outboundReroutePhoneNumber: nil,
+			allowOutboundLocalCalls: nil,
+			inboundCallMode: nil,
+			alternateBlockingAnnouncement: nil,
+			routeToVoiceMail: nil
+		}
+	end
+
 	def GroupHuntGroupGetInstanceListRequest(ent=nil,group=nil)
 		config_hash = {
 			serviceProviderId: ent,

@@ -100,6 +100,11 @@ class BWTest
       end
     end
 
+    def active_group_intercept
+        cmd_ok,response = $bw.mod_group_intercept("peteENT","peteGRP",true)
+        puts "My response: \n#{response}"
+        puts "\nCMD OK? #{cmd_ok}"
+    end
 
 
 end
