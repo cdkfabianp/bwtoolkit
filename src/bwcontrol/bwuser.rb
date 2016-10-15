@@ -74,13 +74,10 @@ class BWUser < BWControl
         return cmd_ok,user_filtered_info
     end
 
-    def get_users_in_group(ent=nil,group=nil)
+    def get_users_in_group(ent=nil,group=nil,search_criteria=nil,value=nil,mode='Equal To',isCaseInsensitive=nil)
     	oci_cmd = :UserGetListInGroupRequest
-    	config_hash = send(oci_cmd)
-    	config_hash[:serviceProviderId] = ent
-    	config_hash[:GroupId] = group
+    	config_hash = send(oci_cmd,ent,group,search_criteria,value,mode,isCaseInsensitive)
     	abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
-
         users = Array.new
         table_header = "userTable"
 
