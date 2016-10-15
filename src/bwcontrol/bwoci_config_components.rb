@@ -21,6 +21,14 @@ class OCIComponents
 		}
 	end
 
+	def searchCriteriaDeviceMACAddress(value=nil,mode='Equal To',isCaseInsensitive=true)
+		config_hash = {
+			mode: mode,
+			value: value,
+			isCaseInsensitive: isCaseInsensitive
+		}
+	end
+
 	def searchCriteriaUserId(value=nil)
 		config_hash = {
 			mode: "Starts With",
