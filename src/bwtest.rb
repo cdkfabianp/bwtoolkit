@@ -109,6 +109,14 @@ class BWTest
     def get_mac_in_sys(mac)
       cmd_ok,response = $bw.find_device_by_mac(:searchCriteriaDeviceMACAddress,mac)
       puts "Got mac info:\n#{response}"    
+      return response
+    end
+
+    def get_user_by_ext(mac)
+      response = get_mac_in_sys(mac)
+      ext = '6109'
+      cmd_ok,users = $bw.get_users_in_group(response[0][:Service_Provider_Id],response[0][:Group_Id],:searchCriteriaExtension,ext)
+      puts "found user: #{users[0]} for extension: #{ext}"
     end
 
 end
