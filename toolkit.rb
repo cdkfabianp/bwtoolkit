@@ -15,7 +15,7 @@ def bwtest
 
 	t = BWTest.new
 	# t.print_group_list_of_ents($options[:user])
-	t.active_group_intercept
+	t.get_mac_in_sys($options[:user])
 end
 
 # Configure specified users in group for UCOne

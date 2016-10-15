@@ -106,5 +106,9 @@ class BWTest
         puts "\nCMD OK? #{cmd_ok}"
     end
 
+    def get_mac_in_sys(mac)
+      cmd_ok,response = $bw.find_device_by_mac(:searchCriteriaDeviceMACAddress,mac)
+      puts "Got mac info:\n#{response}"    
+    end
 
 end
