@@ -310,6 +310,13 @@ class BWOci < OCIComponents
 
 	end
 
+	def SystemAccessDeviceGetAllRequest(searchCriteria,value=nil,mode='Equal To',isCaseInsensitive=true)
+		config_hash = {
+			responseSizeLimit: 1000,
+			searchCriteria => send(searchCriteria,value,mode,isCaseInsensitive)
+		}
+	end
+
 	def SystemDnGetUtilizationRequest14sp3
 		config_hash = {
 			phoneNumber: nil
