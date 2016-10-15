@@ -12,6 +12,17 @@ class BWSystem < BWEnt
         return cmd_ok,response_hash
     end
 
+    def find_device_by_mac(searchCriteria=nil,value=nil,mode='Equal To',isCaseInsensitive=true)
+        oci_cmd = :SystemAccessDeviceGetAllRequest
+        config_hash = send(oci_cmd,searchCriteria,value,mode,isCaseInsensitive)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if searchCriteria == nil
+
+        table_header = "accessDeviceTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
     def get_sys_poly_device_types
         search_string = [ 'Polycom Business Media VVX 1500',
                     'Polycom Business Media VVX 1501',
