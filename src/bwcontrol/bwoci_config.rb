@@ -408,11 +408,13 @@ class BWOci < OCIComponents
 		}
 	end
 
-	def UserGetListInGroupRequest
+	def UserGetListInGroupRequest(ent=nil,group=nil,search_criteria=nil,value=nil,mode='Equal To',isCaseInsensitive=nil)
 		config_hash = {
-			serviceProviderId: nil,
-			GroupId: nil,
+			serviceProviderId: ent,
+			GroupId: group,
 		}
+		config_hash[search_criteria] = send(search_criteria,value,mode,isCaseInsensitive) if search_criteria
+		return config_hash
 	end
 
 	def UserGetListInSystemRequest(ele)
