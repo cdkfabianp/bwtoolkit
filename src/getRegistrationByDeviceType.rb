@@ -12,6 +12,7 @@ class GetRegByDeviceType
 	end
 
 	def get_poly_list
+		curr_date = Time.now.strftime("%-m/%-d/%y")
 		puts @counts == true ? "Enterprise,Group,Configured,Registered" : "\"Enterprise\",\"Group - Group Name\",\"ConfiguredDeviceType\",\"ActualDeviceType\",\"DeviceVersion\",\"DeviceConfigType\",\"DeviceMac\""
 		@ent_groups.each do |ent,groups|
 			groups.each do |group|
@@ -32,7 +33,7 @@ class GetRegByDeviceType
 				reged_devices = ua_device_list.length
 
 				#Print results, if $options[:counts] (IE -s true) print only summary information, otherwise print details
-				@counts == true ? print_poly_reg_counts(ent,group,group_name,configed_devices,reged_devices) : print_poly_reg_list(ent,group,group_name,ua_device_list)
+				@counts == true ? print_poly_reg_counts(ent,group,group_name,configed_devices,reged_devices) : print_poly_reg_list(curr_date,ent,group,group_name,ua_device_list)
 			end
 		end
 
@@ -43,8 +44,8 @@ class GetRegByDeviceType
 		puts "#{ent}|#{group} - #{group_name}|#{configed_devices}|#{reged_devices}" if configed_devices > 0
 	end
 
-	def print_poly_reg_list(ent,group,group_name,ua_device_list)
-		ua_device_list.each { |dev_mac,dev_info| puts "\"#{ent}\"|\"#{group} - #{group_name}\"|\"#{dev_info.join("\"|\"")}\"|\"#{dev_mac}\"" }		
+	def print_poly_reg_list(date,ent,group,group_name,ua_device_list)
+		ua_device_list.each { |dev_mac,dev_info| puts "\"#{date}\",\"#{ent}\"|\"#{group} - #{group_name}\"|\"#{dev_info.join("\"|\"")}\"|\"#{dev_mac}\"" }		
 	end
 
 	def get_reg_info(ent,group,devices_list)
