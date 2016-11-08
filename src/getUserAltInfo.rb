@@ -64,7 +64,7 @@ class GetAltNumberInfo
 
     	puts "UserId,LastName,FirstName,PhoneNumber,Extension,Alt1,Alt2,Alt3,Alt4,Alt5,Alt6,Alt7,Alt8,Alt9,Alt10"
 
-    	@users_info.each { |user,user_list| puts "#{user},#{user_list.join(",")}" }
+    	@users_info.each { |user,user_list| puts "\"#{user}\",\"#{user_list.join("\",\"")}\"" }
     end
 
 end
