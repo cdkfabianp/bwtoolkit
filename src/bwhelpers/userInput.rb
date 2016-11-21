@@ -121,6 +121,7 @@ class UserInput
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
         opts.on("-o", "--orca ORCAWAVE INFO", "Print specific details to import into ORCAWAVE") { |v| options[:orca] = v}
         opts.on("-v", "--verbose VERBOSE INFO", "Get additional enterprise and group detail") { |v| options[:verbose] = v}
+        opts.on("-s", "--snap SNAP BILLING INFO", "Print specific details to export customer data to SNAP Recordings") { |v| options[:snap] = v}
 
         return opts,options
     end
