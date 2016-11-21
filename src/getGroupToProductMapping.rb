@@ -22,11 +22,14 @@ class GroupToProductMapping
 				'cube.adpvoice.com' => 'CTC'
 			}
 		end	
+
+		@blanks = {a: "", b: "", c: ""}
+		@switch_info = {switch: "Broadsoft", switch_ver: "R20sp1", blank: ""}
 	end
 
 	def get_product_map(ent,group_list)
 		ent_name,ent_addr = get_profile_info(ent)
-		ent_info = {ent_id: ent, ent_name: ent_name, ent_addr: ent_addr, group_info: Hash.new}
+		ent_info = {ent_id: ent, ent_name: ent_name, ent_addr: ent_addr, contact_info: @blanks, switch_platform: @switch_info, group_info: Hash.new}
 
 		group_list.each do |group|		
 			ent_info[:group_info] = Hash.new
@@ -37,6 +40,8 @@ class GroupToProductMapping
 			my_values = Array.new
 			if $options[:orca] == "true"
 				my_values = print_orca_info(ent_info)
+			elsif $options[:snap] == "true"
+				my_values = print_snap_info(ent_info)
 			else
 				#Ugly stuff to print out CSV lines with values in quotes ""
 				#Used originally to populate SNAP Customer Data Spreadsheet
@@ -54,6 +59,17 @@ class GroupToProductMapping
 
 	def print_orca_info(ent_info)
 		ent_info.each {|k,v| puts "\"#{v[:group_id]}\"|\"#{v[:group_name]}\"|\"#{v[:product_type]}\"" if k == :group_info}
+	end
+
+	def print_snap_info(ent_info)
+		counter = 0
+		my_values = print_ent_info(ent_info)
+		my_values.each do |value|
+			print "\"#{value}\""
+			print "," unless counter == my_values.length - 1
+			print "\n" if counter == my_values.length - 1
+			counter += 1
+		end
 	end
 
 	def print_ent_info(ent_info,my_values=Array.new)
