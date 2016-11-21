@@ -159,6 +159,7 @@ def get_ent_info
 end
 
 
+#Run SNAP Report -s true -v true -a ALL
 def get_group_to_product_mapping
 	require_relative 'src/getGroupToProductMapping'
 	verbose = false
