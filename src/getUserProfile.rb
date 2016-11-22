@@ -54,4 +54,11 @@ class GetProfileInfo
 		return user_list
 	end
 
+	def print_users_in_group
+		group = $options[:group]
+		ent = $options[:ent]
+
+		puts $bw.get_users_in_group(ent,group)
+	end
+
 end
