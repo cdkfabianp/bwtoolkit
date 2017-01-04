@@ -13,7 +13,7 @@ class GetRegByDeviceType
 
 	def get_poly_list
 		curr_date = Time.now.strftime("%-m/%-d/%y")
-		puts @counts == true ? "Enterprise,Group,Configured,Registered" : "\"Enterprise\",\"Group - Group Name\",\"ConfiguredDeviceType\",\"ActualDeviceType\",\"DeviceVersion\",\"DeviceConfigType\",\"DeviceMac\""
+		puts @counts == true ? "Enterprise,Group,Configured,Registered" : "\"Date\"|\"Enterprise\"|\"Group - Group Name\"|\"ConfiguredDeviceType\"|\"ActualDeviceType\"|\"DeviceVersion\"|\"DeviceConfigType\"|\"DeviceMac\""
 		@ent_groups.each do |ent,groups|
 			groups.each do |group|
 				cmd_ok,g_profile = $bw.get_group_profile(ent,group)
@@ -45,7 +45,7 @@ class GetRegByDeviceType
 	end
 
 	def print_poly_reg_list(date,ent,group,group_name,ua_device_list)
-		ua_device_list.each { |dev_mac,dev_info| puts "\"#{date}\",\"#{ent}\"|\"#{group} - #{group_name}\"|\"#{dev_info.join("\"|\"")}\"|\"#{dev_mac}\"" }		
+		ua_device_list.each { |dev_mac,dev_info| puts "\"#{date}\"|\"#{ent}\"|\"#{group} - #{group_name}\"|\"#{dev_info.join("\"|\"")}\"|\"#{dev_mac}\"" }		
 	end
 
 	def get_reg_info(ent,group,devices_list)
@@ -56,7 +56,7 @@ class GetRegByDeviceType
 	    	dev_name = device_list[:Device_Name]
 	    	
 	    	# First way to get UA info 
-	    	config_type = get_phone_config_info(ent,group,dev_name)	
+	    	config_type,config_dev_type,version = get_phone_config_info(ent,group,dev_name)	
 			cmd_ok, user_ids = $bw.get_users_assigned_to_device(ent,group,dev_name)
 			user_ids.each do |user|
 				#Skip User Reg Lookup if we have already found the Device Info
@@ -68,11 +68,7 @@ class GetRegByDeviceType
 
 					#Insert configured MAC if MAC doesn't exist within User-Agent string
 					dev_mac = device_list[:MAC_Address] unless dev_mac
-					ua_device_list[dev_mac] = [dev_type,dev_ver,config_type]
-						#Insert configured MAC if MAC doesn't exist within User-Agent string
-						dev_mac = device_list[:MAC_Address] unless dev_mac
-						ua_device_list[dev_mac] = [dev_type,dev_ver,config_type]
-					end
+					ua_device_list[dev_mac] = [config_dev_type,dev_type,dev_ver,config_type]
 				end	    
 			end	
 			# End First Way
