@@ -65,8 +65,9 @@ class GroupToProductMapping
 		counter = 0
 		my_values = print_ent_info(ent_info)
 		my_values.each do |value|
+			next unless my_values.include?("Hosted")
 			print "\"#{value}\""
-			print "," unless counter == my_values.length - 1
+			print "|" unless counter == my_values.length - 1
 			print "\n" if counter == my_values.length - 1
 			counter += 1
 		end
