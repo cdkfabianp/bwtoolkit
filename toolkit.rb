@@ -7,6 +7,7 @@ require_relative 'src/bwhelpers/userInput'
 require_relative 'src/bwhelpers/helpers'
 require_relative 'src/bwhelpers/bwhelpers'
 require_relative 'src/bwhelpers/string'
+require_relative 'src/bwhelpers/confluence_helpers'
 
 
 # Test Method for Playing with BW OCI Calls
@@ -75,15 +76,37 @@ def tn_port_out
 	require_relative 'src/tnPortOut'
 	port = TNPortOut.new
 
-	tn_list = $bw_helper.get_array_from_file($options[:file])
-	if $options[:remove] == "true"
-		# Remove TNs
-		port.get_values(tn_list) {|cmd,config_hash| port.send(cmd, config_hash)}
-	else
-		# Print list of results of which tns will be removed
-		port.get_values(tn_list) {|cmd,config_hash| puts "#{config_hash}" }
+	#Validate Carrier Input (option -c)
+	abort "Invalid carrier input, Must specify Losing carrier.  Valid options are VZN or L3." unless $options[:carrier] == "VZN" || $options[:carrier] == "L3"
 
+	#Parse Port Out List (expecting File to be "TN","Winning Carrier") and create Hash (format tn => winning carrier)
+	tn_list = Array.new
+	csv_file = CSV.read($options[:file])
+
+	# Parse Port Out File - Col1 = TN Col2 = Winning Carrier
+	# Ignore any TNs that were ported to Level3 or Verizon (They may have been ported by CDK to troubleshoot customer issue.  These numbers will get removed when loss for group is reported)
+	csv_file.each do |line|
+		if line[1] == "Level 3 Communications" || line[1] =~ /Verizon/
+			puts "Skipping #{line[0]}: Number ported to #{line[1]}"
+		else
+			tn_list.push(line[0])
+		end
 	end
+
+	confluence_update_response = port.remove_tns(tn_list)
+
+	if $options[:remove]
+		puts "Removed #{$tns_removed_ok} TNs from Broadworks"		
+		if confluence_update_response == nil
+			"No updates made to confluence - no TNs removed"
+		elsif confluence_update_response.code == "200"
+			"Successfully updated confluence with Port-Out TN info"
+		else
+			"Updating Confluence failed with code: #{confluence_update_response.code} -- #{confluence_update_response.message}"
+		end
+	end
+	
+
 end
 
 
@@ -211,11 +234,13 @@ def validate_ent
 	e = ValidateEnterprise.new
 
 	ent_list = Array.new
-	if $options.has_key?(:file) &&
-		ent_list = $bw_helper.get_array_from_file($options[:file])
+	if $options.has_key?(:file)
+		group_list = $bw_helper.get_array_from_file($options[:file])
 	elsif $options.has_key?(:ent)
-		ent_list.push($options[:ent])
+		group_list.push($options[:ent])
 	end
+	ent_list = Array.new
+	group_list.each { |group| ent_list.push($bw.get_ent_by_group_id($options[:group]))}
 	e.validate_ent(ent_list)
 
 end
