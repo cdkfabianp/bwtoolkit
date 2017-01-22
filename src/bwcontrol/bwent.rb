@@ -116,5 +116,15 @@ class BWEnt < BWGroup
         return cmd_ok,spCppCLIDSettings
     end
 
+    def mod_ent_delete_dn(ent=nil,tn_list=nil,ok_to_mod=true)
+        oci_cmd = :ServiceProviderDnDeleteListRequest
+        config_hash = send(oci_cmd,ent,tn_list)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_mod)
+
+        return cmd_ok,response
+    end
+
 
 end
