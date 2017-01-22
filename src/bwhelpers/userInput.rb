@@ -156,6 +156,7 @@ class UserInput
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
         opts.on("-r", "--remove REMOVE", "[true|false] Set to true to remove TNs from Broadworks.  False to run audit") {|v| options[:remove] = v}
         opts.on("-f", "--file FILE", "Specify file with list of TNs to remove (One tn per line)") {|v| options[:file] = v}
+        opts.on("-c", "--carrier CARRIER", "Specify if TNs were ported out of either verizon or level3.  Valid options are VZN or L3") {|v| options[:carrier] = v}
 
         return opts,options
     end
