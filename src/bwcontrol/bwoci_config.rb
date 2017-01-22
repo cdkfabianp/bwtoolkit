@@ -285,6 +285,13 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def ServiceProviderDnDeleteListRequest(ent=nil,tn_list=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			phoneNumber: tn_list
+		}
+	end
+	
 	def ServiceProviderDnGetSummaryListRequest(ent=nil)
 		config_hash = {
 				serviceProviderId: ent
