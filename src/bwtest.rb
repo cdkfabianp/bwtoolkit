@@ -119,4 +119,34 @@ class BWTest
       puts "found user: #{users[0]} for extension: #{ext}"
     end
 
+    def audit_bwdevice_macs(bwdevice_list)
+      bwdevices = File.open(bwdevice_list) or die "Unable to find file: #{bwdevice_list}"
+      bwdevices.each_line do |bwdevice|
+        bwdevice.strip!
+        mac = nil
+        mac = $1 if bwdevice =~ /^BWDEVICE_(\w*)\.cfg/          
+        cmd_ok,response = $bw.find_device_by_mac(:searchCriteriaDeviceMACAddress,mac) unless mac == nil
+        print "#{bwdevice},#{mac},"
+        if cmd_ok == false
+          puts "ERROR: #{response}"
+        elsif response == []
+          puts "DEVICE_NOT_FOUND"         
+        elsif response.length > 1
+          puts "MULTIPLE_RESPONSES"                              
+        else
+          puts "#{response[0][:Service_Provider_Id]},#{response[0][:Group_Id]}"
+        end
+      end
+    end
+
+    def audit_ftp_users(ftp_user_list)
+      ftpusers = File.open(ftp_user_list) or die "Unable to find file: #{ftp_user_list}"
+      ftpusers.each_line do |ftp_user|
+        ftp_user.strip!
+        group_cmf = $1 if ftp_user =~ /^ftp?(\d*)/i
+        cmd_ok,group_exists,ent_id,response = $bw.group_exists?(group_cmf)
+        puts "#{ftp_user},#{group_cmf},#{group_exists},#{ent_id}"
+      end
+    end
+
 end
