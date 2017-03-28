@@ -161,7 +161,7 @@ class TNPortOut
     tn_hash = $helper.make_hohoh
     tn_info = @t.tn_search(tns)
     tn_info.each do |tn,i|
-      puts "My TN: #{tn}   i: #{i}"
+      # puts "My TN: #{tn}   i: #{i}"
       if i.has_key?(:groupId)
         tn_hash[i.delete(:serviceProviderId)][i.delete(:groupId)][tn] = i
       else
@@ -259,7 +259,7 @@ class TNPortOut
   end
 
   def cleanup_remove(config_hash,cmd_ok,dn_config)
-    puts "#{__method__} : CONFIG_HAHS: #{config_hash} | DN_CONFIG: #{dn_config}"
+    # puts "#{__method__} : CONFIG_HAHS: #{config_hash} | DN_CONFIG: #{dn_config}"
     if cmd_ok == true
       @group_tns_removed.push(config_hash[:tn])
       $tns_removed_ok[:users] += 1
