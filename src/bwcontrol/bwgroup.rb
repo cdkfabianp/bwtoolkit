@@ -1,6 +1,26 @@
 require_relative 'bwuser'
 class BWGroup < BWUser
 
+    def group_exists?(group=nil)
+        oci_cmd = :GroupGetListInSystemRequest
+        config_hash = send(oci_cmd)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if group == nil
+
+        table_header = "groupTable"
+        config_hash[:searchCriteriaGroupId][:value] = group
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        group_exists = false
+        ent_id = nil
+        if response_hash.length == 1
+            group_exists = true 
+            ent_id = response_hash[0][:Organization_Id]
+        end
+
+        return cmd_ok,group_exists,ent_id,response_hash
+
+    end
+
     def get_groups(ent=nil)
         oci_cmd = :GroupGetListInServiceProviderRequest
         config_hash = send(oci_cmd,ent)
