@@ -140,13 +140,64 @@ class BWTest
     end
 
     def audit_ftp_users(ftp_user_list)
+      
+      #Initialize TN Search Tool
+      require_relative 'tn_search'
+      t = TnSearch.new
+
+
       ftpusers = File.open(ftp_user_list) or die "Unable to find file: #{ftp_user_list}"
       ftpusers.each_line do |ftp_user|
         ftp_user.strip!
-        group_cmf = $1 if ftp_user =~ /^ftp?(\d*)/i
-        cmd_ok,group_exists,ent_id,response = $bw.group_exists?(group_cmf)
-        puts "#{ftp_user},#{group_cmf},#{group_exists},#{ent_id}"
+        ftp_cmf = nil
+
+        if ftp_user =~ /(\d{10})/
+          ftp_tn  = $1
+        elsif ftp_user =~ /^ftp?(\d{2,})/i
+          ftp_cmf = $1 
+        elsif ftp_user =~ /(76\d{6})/
+          ftp_cmf = $1
+        end
+
+        # puts "FTP_CMF: #{ftp_cmf}, TN: #{ftp_tn}"
+        group_exists = false
+        result = {
+          ftp_user: ftp_user,
+          ftp_cmf: nil,
+          ftp_tn: nil,
+          group_exists: nil,
+          ent_exists: nil,
+          tn_exists: nil
+        }
+        result[:ftp_cmf] = ftp_cmf
+        result[:ftp_tn] = ftp_tn
+        if ftp_cmf
+          cmd_ok,group_exists,ent_id,response = $bw.group_exists?(ftp_cmf)
+          result[:group_exists] = group_exists
+        end
+
+        if ftp_cmf && group_exists == false
+          cmd_ok,ent_exists,ent_name,response_hash = $bw.ent_exists?(ftp_cmf)
+          result[:ent_exists] = ent_exists
+        end
+
+        if ftp_tn
+          tn_info = t.tn_search([ftp_tn])
+          if tn_info[ftp_tn][:serviceProviderId]
+            result[:tn_exists] = true 
+          else
+            result[:tn_exists] = false
+          end
+        end
+
+        puts result.values.join(",")
       end
+    end
+
+    def test_get_ents
+      response = $bw.get_ents
+
+      puts response
     end
 
 end
