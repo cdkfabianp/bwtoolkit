@@ -304,10 +304,17 @@ class BWOci < OCIComponents
 		}
 	end
 
-	def ServiceProviderGetListRequest
-		config_hash = {
-			isEnterprise: true
-		}
+	def ServiceProviderGetListRequest(searchCriteria=nil,value=nil,mode='Equal To',isCaseInsensitive=nil)
+		if searchCriteria
+			config_hash = {
+				isEnterprise: true,
+				searchCriteria => send(searchCriteria,value,mode,isCaseInsensitive)
+			}
+		else
+			config_hash = {
+				isEnterprise: true,
+			}
+		end
 	end
 
 	def ServiceProviderGetRequest17sp1(ent=nil)
