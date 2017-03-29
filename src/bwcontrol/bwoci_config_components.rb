@@ -59,6 +59,14 @@ class OCIComponents
 		}
 	end
 
+	def searchCriteriaServiceProviderId(value=nil,mode='Equal To',isCaseInsensitive=nil)
+		config_hash = {
+			mode: "Equal To",
+			value: value,
+			isCaseInsensitive: true
+		}
+	end
+
 	def serviceInstanceProfile(tn=nil,ext=nil,aliasList=nil,publicId=nil)
 		config_hash = {
 			phoneNumber: tn,
