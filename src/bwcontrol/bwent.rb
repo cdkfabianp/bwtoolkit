@@ -1,6 +1,27 @@
 require_relative 'bwgroup'
 
 class BWEnt < BWGroup
+
+    def ent_exists?(ent=nil)
+        oci_cmd = :ServiceProviderGetListRequest
+        config_hash = send(oci_cmd,:searchCriteriaServiceProviderId,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = "serviceProviderTable"
+        # config_hash[:searchCriteriaGroupId][:value] = ent
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        ent_exists = false
+        ent_name = nil
+        if response_hash.length == 1
+            ent_exists = true 
+            ent_name = response_hash[0][:Service_Provider_Name]
+        end
+
+        return cmd_ok,ent_exists,ent_name,response_hash
+
+    end
+
     def get_ents
         oci_cmd = :ServiceProviderGetListRequest
         ents = Array.new
@@ -36,7 +57,7 @@ class BWEnt < BWGroup
         response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
 
         ent = "Could not find group: #{group} in system.  Group must be exact match (case INsensitive) for existing group in system"
-        if response_hash.is_a?(Array)
+        if response_hash.is_a?(Array) && response_hash.empty? == false
             if response_hash[0].has_key?(:Organization_Id)
                 ent = response_hash[0][:Organization_Id]
             else
