@@ -1,6 +1,6 @@
 # Project Specific
 .idea/
-conf/bw_sys.conf
+conf/bw_sys.conf*
 conf/service_pack.conf
 conf/eis_sys.conf
 src/stand-alone/
