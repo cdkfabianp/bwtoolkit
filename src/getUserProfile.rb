@@ -61,4 +61,22 @@ class GetProfileInfo
 		puts $bw.get_users_in_group(ent,group)
 	end
 
+	def print_long_user_ids
+		ent_groups = $bw.get_groups_in_system if $options[:ent] == nil			
+
+		ent_groups.each do |ent,groups|
+			groups.each do |group|
+
+				cmd_ok,user_list = $bw.get_users_in_group(ent,group)
+				user_list.each do |user|
+					user_name = user.split("@")[0]
+					if user_name.length > 16
+						puts "#{user},TOO_MANY_CHARS"
+					elsif user_name =~ /^(?!\d)/
+						puts "#{user},NO_START_NUM"
+					end
+				end
+			end
+		end
+	end
 end
