@@ -81,6 +81,27 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    def get_group_assigned_service_list(ent=nil,group=nil)
+        oci_cmd = :GroupServiceGetAuthorizationListRequest
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = "groupServicesAuthorizationTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)                
+
+        return cmd_ok,response_hash
+    end
+
+    def is_service_authorized?(ent=nil,group=nil,service)
+        cmd_ok,response_hash = get_group_assigned_service_list(ent,group)
+
+        service_assigned = false
+        response_hash.each do |svc_info|
+            service_assigned = true if svc_info[:Service_Name] == service && svc_info[:Authorized] == "true"
+        end
+        return service_assigned
+    end
+
     # Return Default Domain for Group
     def get_group_default_domain(ent=nil,group=nil)
         oci_cmd = :GroupDomainGetAssignedListRequest
@@ -218,6 +239,44 @@ class BWGroup < BWUser
         return cmd_ok,response_hash
     end
 
+    # Return Trunking Capacity from Group > Resources > Trunking Call Capacity
+    def get_group_trunk_cap(ent=nil,group=nil)
+        oci_cmd = :GroupTrunkGroupGetRequest14sp9
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+        trunk_cap = response_hash[:maxActiveCalls]
+
+        return cmd_ok,trunk_cap
+    end
+
+    # Return Trunk Capacity assigned to Trunk Group from Group > Services > Trunk Groups > Profile > Max Active Calls Allowed
+    def get_trunk_group_trunk_config(ent=nil,group=nil,tg_name=nil)
+        oci_cmd = :GroupTrunkGroupGetInstanceRequest20sp1
+        config_hash = send(oci_cmd,ent,group,tg_name)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    # Get List of All trunk groups in Group
+    def get_trunk_group_trunk_list(ent=nil,group=nil)
+        oci_cmd = :GroupTrunkGroupGetInstanceListRequest14sp4
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil  
+
+        trunk_list = Array.new
+        table_header = "trunkGroupTable"
+
+        trunks,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)    
+        trunks.each { |trunk_hash| trunk_list << trunk_hash[:Name] }
+
+        return cmd_ok,trunk_list
+    end
+
     def get_users_assigned_to_service(ent=nil,group=nil,service=nil)
         oci_cmd = :GroupGetUserServiceAssignedUserListRequest
         config_hash = send(oci_cmd,ent,group,service)
@@ -231,7 +290,6 @@ class BWGroup < BWUser
 
         return cmd_ok,user_list
     end
-
 
     def mod_add_group_device(dev_hash,dev_mgmt_creds=nil)
         oci_cmd = :GroupAccessDeviceAddRequest14
@@ -294,7 +352,28 @@ class BWGroup < BWUser
 
         response,cmd_ok = send_request(oci_cmd,config_hash)
 
-      return cmd_ok,response
+        return cmd_ok,response
+    end
+
+    def mod_group_trunk_cap(ent=nil,group=nil,max_calls=nil)
+        oci_cmd = :GroupTrunkGroupModifyRequest14sp9
+        config_hash = send(oci_cmd,ent,group,max_calls)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil  
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response        
+    end
+
+    def mod_group_tg_trunk_cap(ent=nil,group=nil,tg=nil,mod_config)
+        oci_cmd = :GroupTrunkGroupModifyInstanceRequest20sp1
+        config_hash = send(oci_cmd,ent,group,tg,mod_config)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil  
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response   
+
     end
 
     def mod_group_unassign_dn(ent=nil,group=nil,tn_list=nil,ok_to_mod=true)
