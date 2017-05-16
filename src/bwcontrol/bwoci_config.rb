@@ -154,6 +154,21 @@ class BWOci < OCIComponents
     	}
     end
 
+    def GroupServiceGetAuthorizationListRequest(ent=nil,group=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,    		
+    	}
+    end
+
+    def GroupAssignedServicesGetListRequest(ent=nil,group=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,    		
+    	}
+    end
+
+
 #
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
@@ -273,6 +288,43 @@ class BWOci < OCIComponents
 		}
     end
 
+    def GroupTrunkGroupGetInstanceListRequest14sp4(ent=nil,group=nil)
+    	config_hash = {
+			serviceProviderId: ent,
+			groupId: group,     		
+    	}
+    end
+
+    def GroupTrunkGroupGetInstanceRequest20sp1(ent=nil,group=nil,tg_name=nil)
+    	config_hash = {
+			"trunkGroupKey" => send(:trunkGroupKey,ent,group,tg_name)  		
+    	}
+    end
+
+    def GroupTrunkGroupGetRequest14sp9(ent=nil,group=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,   			
+		}
+    end
+
+    def GroupTrunkGroupModifyInstanceRequest20sp1(ent=nil,group=nil,tg_name=nil,mod_config=nil)
+    	config_hash = {
+    		"trunkGroupKey" => send(:trunkGroupKey,ent,group,tg_name),
+    	}
+    	mod_config.each { |k,v| config_hash[k] = v }
+
+    	return config_hash
+    end
+
+    def GroupTrunkGroupModifyRequest14sp9(ent=nil,group=nil,max_calls=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,
+    		maxActiveCalls: max_calls,
+    	}
+    end
+
 	def ServiceProviderAdminGetListRequest14(ent=nil)
 		config_hash = {
 			serviceProviderId: ent
@@ -300,7 +352,7 @@ class BWOci < OCIComponents
 
 	def ServiceProviderEndpointGetListRequest(ent=nil)
 		config_hash = {
-				serviceProviderId: ent
+			serviceProviderId: ent
 		}
 	end
 
@@ -322,6 +374,19 @@ class BWOci < OCIComponents
 			serviceProviderId: ent
 		}
 
+	end
+
+	def ServiceProviderTrunkGroupGetRequest14sp1(ent=nil)
+		config_hash = {
+			serviceProviderId: ent
+		}
+	end
+
+	def ServiceProviderTrunkGroupModifyRequest(ent=nil,max_calls=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			maxActiveCalls: send(:maxActiveCalls,max_calls)
+		}
 	end
 
 	def SystemAccessDeviceGetAllRequest(searchCriteria,value=nil,mode='Equal To',isCaseInsensitive=true)
