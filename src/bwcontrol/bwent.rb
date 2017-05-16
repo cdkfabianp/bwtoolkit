@@ -112,6 +112,17 @@ class BWEnt < BWGroup
         return cmd_ok,response_hash
     end
 
+    def get_ent_trunk_cap(ent=nil)
+        oci_cmd = :ServiceProviderTrunkGroupGetRequest14sp1
+        config_hash = send(oci_cmd,ent)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        response_hash,cmd_ok = get_nested_rows_response(oci_cmd,config_hash)
+        trunk_cap = response_hash[:maxActiveCalls][:quantity]
+
+        return cmd_ok,trunk_cap
+    end
+
     def get_service_users_in_ent(ent)
         cmd_ok,response_hash = get_ent_service_list(ent)
 
@@ -146,6 +157,18 @@ class BWEnt < BWGroup
 
         return cmd_ok,response
     end
+
+    def mod_ent_trunk_cap(ent=nil,max_calls=nil)
+        oci_cmd = :ServiceProviderTrunkGroupModifyRequest
+        config_hash = send(oci_cmd,ent,max_calls)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil 
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response    
+
+    end
+
 
 
 end
