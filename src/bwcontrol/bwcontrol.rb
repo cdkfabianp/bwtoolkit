@@ -62,7 +62,7 @@ class BWControl < BWOci
     end
 
     def build_xml(x,hash)
-        abort "Element: #{hash} is not of type Hash" if hash.is_a?(Hash) == false
+        abort "#{self.class} / #{__method__} : Element: #{hash} is not of type Hash" if hash.is_a?(Hash) == false
         hash.each do |key,val|
             if val.is_a?(Hash)
                 # Build Attributes if Hash contains :attr
