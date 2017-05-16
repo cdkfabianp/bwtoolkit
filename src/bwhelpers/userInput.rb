@@ -40,6 +40,7 @@ class UserInput
                 get_poly_list:                  Find all Active Polycom Device Types in System 
                 get_user_list_w_alt_nums:       Print list of all users in group including first two alternate numbers assigned
                 get_user_profile:               Print specified atributes of USER from User Profile
+                update_trunk_cap:               Update Trunk capacity for all trunk groups and groups under specific enterprise
                 mod_user_config:                Modify basic user configuration
                 validate_ent:                   Validate that specified Enterprise is valid in the system (likelness that is is in use)
         "
@@ -181,6 +182,12 @@ class UserInput
         return opts,options        
     end
 
+    def update_trunk_cap(opts,options)
+        opts.on("-e", "--ent ENTERPRISE", "Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
+        opts.on("-c", "--cap CAPACITY", "Specify new trunk capacity to be assigend to all trunks and groups under enterprise -e") { |v| options[:cap] = v}
+        return opts,options
+    end
+    
     def mod_user_config(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
         opts.on("-u", "--user USER", "User or List of Users to modify in the system") {|v| options[:user] = v}   
