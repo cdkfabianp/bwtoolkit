@@ -231,6 +231,12 @@ def mod_user_config
 	u.modify_user($options[:user],$options[:sub_cmd])
 end
 
+def update_trunk_cap
+	require_relative 'src/updateTrunkCapacity'
+	c = UpdateTrunkCapacity.new
+	c.reclaim_trunk_licenses
+end
+
 def validate_ent
 	require_relative 'src/validateEnterprise'
 	e = ValidateEnterprise.new
