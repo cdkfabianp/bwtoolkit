@@ -15,6 +15,12 @@ class OCIComponents
 		}
 	end
 
+	def maxActiveCalls(max_calls=nil)
+		config_hash = {
+			quantity: max_calls
+		}
+	end
+	
 	def networkClassOfService
 		config_hash = {
 
@@ -73,6 +79,14 @@ class OCIComponents
 			extension: ext,
 			sipAliasList: aliasList,
 			publicUserIdentity: publicId
+		}
+	end
+
+	def trunkGroupKey(ent=nil,group=nil,tg_name=nil)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group, 
+			name: tg_name
 		}
 	end
 
