@@ -31,9 +31,12 @@ class UpdateTrunkCapacity
 			cmd_ok,response = mod_group_trunk_group(trunks_to_mod,update_trunks)	
 
 			# Update Group Trunk Capacity (Group > Resources > Trunking Call Capacity > Maximum Capacity for any Trunk Group)
+			cmd_ok,group_profile = $bw.get_group_profile(@ent,group)
+			group_name = group_profile[:groupName].delete(?,) if group_profile.has_key?(:groupName)
+
 			cmd_ok,group_cap = $bw.get_group_trunk_cap(@ent,group)
 			cmd_ok,response = $bw.mod_group_trunk_cap(@ent,group,@new_trunk_cap) if group_cap > @new_trunk_cap
-			print_result("Group Trunk Capacity for #{group}",cmd_ok,response)
+			print_result("Group Trunk Capacity for \"#{group} - #{group_name}\"",cmd_ok,response)
 		end		
 
 		# Update Enterprise Trunk Capacity (Enterprise > Resources > Trunking Call Capacity)
@@ -159,14 +162,19 @@ class BTLUParser
 		#Sort HASH by proposed recoverable
 		max_calls_sorted = max_calls.sort_by {|k,v| v[:prop_rec]}
 
-		puts "status,entId,capacity,high_water_mark,max_recoverable,proposed_recoverable,update_capacity_to"
+		puts "status,entId,ent_name,capacity,high_water_mark,max_recoverable,proposed_recoverable,update_capacity_to"
 		max_calls_sorted.each do |ent,btlu_info| btlu_info[:prop_rec]
+			# Get Enterprise Name and remove comma's from name
+			cmd_ok,ent_profile = $bw.get_ent_profile(ent)
+			ent_name = ent_profile[:serviceProviderName].delete(?,) if ent_profile.has_key?(:serviceProviderName)
+
 			if btlu_info[:rec] == 0 && btlu_info[:cap] > 0
-				puts "NEED_TO_UP,#{ent},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:cap] + 10}"
+				puts "NEED_TO_UP,#{ent},#{ent_name},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:cap] + 10}"
 			elsif btlu_info[:rec] > 10
-				puts "RECOVER_FROM,#{ent},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:set_val]}"
+				puts "RECOVER_FROM,#{ent},#{ent_name},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:set_val]}"
 			end
 		end
+
 		max_rec_sum = 0
 		prop_rec_sum = 0
 		curr_cap = 0
@@ -175,6 +183,7 @@ class BTLUParser
 			prop_rec_sum = prop_rec_sum += data[:prop_rec]
 			curr_cap = curr_cap += data[:cap]			
 		end
+
 		puts "Current Provisioned Capacity: #{curr_cap}"
 		puts "Max Recoverable Trunks: #{max_rec_sum}"
 		puts "Proposed Recoverable Trunks: #{prop_rec_sum}"
