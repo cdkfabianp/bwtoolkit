@@ -183,8 +183,10 @@ class UserInput
     end
 
     def update_trunk_cap(opts,options)
-        opts.on("-e", "--ent ENTERPRISE", "Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
-        opts.on("-c", "--cap CAPACITY", "Specify new trunk capacity to be assigend to all trunks and groups under enterprise -e") { |v| options[:cap] = v}
+        opts.on("-x", "--cmd CMD", "valid options are parse_btlu and reclaim_trunks") {|v| options[:sub_cmd] = v}        
+        opts.on("-e", "--ent ENTERPRISE", "Required if -x reclaim_trunks.  Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
+        opts.on("-c", "--cap CAPACITY", "Required if -x reclaim_trunks.  Specify new trunk capacity to be assigend to all trunks and groups under enterprise -e") { |v| options[:cap] = v}
+        opts.on("-f", "--file FILE", "Required if -x parse_btlu.  This is the local location of the BTLU report as copied from AS1 at: /var/broadworks/reports/btlu/") {|v| options[:file] = v}
         return opts,options
     end
     
