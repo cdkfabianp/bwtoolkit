@@ -105,5 +105,76 @@ class UpdateTrunkCapacity
 
 		return trunk_list
 	end
-
 end
+
+class BTLUParser
+	require 'csv'
+
+	def get_max_calls_from_btlu(btlu_report)
+
+		parsed_hash = Hash.new(Hash.new(0))
+		csv_file = CSV.read(btlu_report)
+		csv_file.each do |line|
+			if line[0] =~ /^\d{8}/
+				ent_id = line[0]
+				high_water_mark = line[3].to_i
+				assigned_trunks = line[2].to_i
+				if parsed_hash.has_key?(ent_id)
+					if high_water_mark > parsed_hash[ent_id][:hwm]
+						parsed_hash[ent_id][:cap] = assigned_trunks						
+						parsed_hash[ent_id][:hwm] = high_water_mark
+						parsed_hash[ent_id][:rec] = assigned_trunks - high_water_mark
+						parsed_hash[ent_id][:prop_rec] = (parsed_hash[ent_id][:rec] * @recover_buffer).to_i
+						parsed_hash[ent_id][:set_val] = parsed_hash[ent_id][:cap] - parsed_hash[ent_id][:prop_rec]
+					end
+				else
+					parsed_hash[ent_id] = {
+						hwm: 0,
+						cap: 0,
+						rec: 0,
+						prop_rec: 0,
+						set_val: 0,
+					}
+				end
+			end
+		end
+
+		return parsed_hash
+	end
+
+
+	def parse_btlu
+		@recover_buffer = 0.75
+
+		# file_path = '/Users/fabianp/logs_scripts/'
+		#file_path = '/Users/fabianp/Downloads/'
+		abort("File not specified with -f") unless $options[:file]
+		btluReport = File.exist?($options[:file]) ?  $options[:file] : abort("could not locate file: #{$options[:file]}\nPlease download from AS1 at /var/broadworks/reports/btlu/")
+
+		max_calls = get_max_calls_from_btlu(btluReport)
+
+		#Sort HASH by proposed recoverable
+		max_calls_sorted = max_calls.sort_by {|k,v| v[:prop_rec]}
+
+		puts "status,entId,capacity,high_water_mark,max_recoverable,proposed_recoverable,update_capacity_to"
+		max_calls_sorted.each do |ent,btlu_info| btlu_info[:prop_rec]
+			if btlu_info[:rec] == 0 && btlu_info[:cap] > 0
+				puts "NEED_TO_UP,#{ent},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:cap] + 10}"
+			elsif btlu_info[:rec] > 10
+				puts "RECOVER_FROM,#{ent},#{btlu_info[:cap]},#{btlu_info[:hwm]},#{btlu_info[:rec]},#{btlu_info[:prop_rec]},#{btlu_info[:set_val]}"
+			end
+		end
+		max_rec_sum = 0
+		prop_rec_sum = 0
+		curr_cap = 0
+		max_calls.each do |entID,data|
+			max_rec_sum = max_rec_sum += data[:rec]
+			prop_rec_sum = prop_rec_sum += data[:prop_rec]
+			curr_cap = curr_cap += data[:cap]			
+		end
+		puts "Current Provisioned Capacity: #{curr_cap}"
+		puts "Max Recoverable Trunks: #{max_rec_sum}"
+		puts "Proposed Recoverable Trunks: #{prop_rec_sum}"
+	end
+end
+
