@@ -233,8 +233,15 @@ end
 
 def update_trunk_cap
 	require_relative 'src/updateTrunkCapacity'
-	c = UpdateTrunkCapacity.new
-	c.reclaim_trunk_licenses
+	if $options[:sub_cmd] == "parse_btlu"
+		c = BTLUParser.new
+		c.parse_btlu
+	elsif $options[:sub_cmd] == "reclaim_trunks"
+		c = UpdateTrunkCapacity.new
+		c.reclaim_trunk_licenses
+	else
+		puts "Invalid option #{options[:sub_cmd]}at -x.  Valid options are reclaim_trunks or parse_btlu"
+	end
 end
 
 def validate_ent
