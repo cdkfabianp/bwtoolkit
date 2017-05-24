@@ -213,6 +213,18 @@ def get_poly_list
 
 end
 
+def get_communicator_info
+	require_relative 'src/getCommunicatorInfo'
+	z = nil
+	if $options.has_key?(:ent)
+		z = GetCommunicatorInfo.new($options[:all_poly],$options[:counts],$options[:ent],$options[:group])
+	else
+		z = GetCommunicatorInfo.new($options[:all_poly],$options[:counts])
+	end
+	z.get_device_list
+
+end
+
 def get_user_list_w_alt_nums
 	require_relative 'src/getUserAltInfo'
 	a = GetAltNumberInfo.new($options[:ent],$options[:group])
