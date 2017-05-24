@@ -35,6 +35,7 @@ class UserInput
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
                 audit_service_pack:             Find all active users assigned to a specific service pack                
+                get_communicator_info:          Get User-Agent Info about UC-One Devices
                 get_ent_info:                   Get Info About Ents and their Groups
                 get_group_to_product_mapping:   Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
                 get_poly_list:                  Find all Active Polycom Device Types in System 
@@ -103,6 +104,15 @@ class UserInput
     def find_tn(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-t TELEPHONE_NUMBER]"
         opts.on("-t", "--telephone_num TN", "Specifiy single Telephone Number or File containing list of TNs.") { |v| options[:tn] = v }
+        return opts,options
+    end
+
+    def get_communicator_info(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-a", "--group GROUP", "Search all groups in system") {|v| options[:all_groups] = v}              
+        opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}      
+        opts.on("-s", "--sum", "[true|false] Print Summary of Counts (total configed / total reg) if true, Otherwise print Registration info for all registered devices") { |v| options[:counts] = v}    
+
         return opts,options
     end
 
