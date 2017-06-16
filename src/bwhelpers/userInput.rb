@@ -133,6 +133,7 @@ class UserInput
         opts.on("-o", "--orca ORCAWAVE INFO", "Print specific details to import into ORCAWAVE") { |v| options[:orca] = v}
         opts.on("-v", "--verbose VERBOSE INFO", "Get additional enterprise and group detail") { |v| options[:verbose] = v}
         opts.on("-s", "--snap SNAP BILLING INFO", "Print specific details to export customer data to SNAP Recordings") { |v| options[:snap] = v}
+        opts.on("-t", "--timezone GROUP TIME ZONE", "Include Group Time Zone info in print out") {|v| options[:vgroup] = v}
 
         return opts,options
     end
