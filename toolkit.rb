@@ -18,7 +18,7 @@ def bwtest
 	# t.print_group_list_of_ents($options[:user])
 	# t.get_user_by_ext($options[:user])
 	# t.audit_bwdevice_macs($options[:user])
-	t.audit_ftp_users($options[:user])
+	t.get_recording_customers($options[:user])
 end
 
 # Configure specified users in group for UCOne

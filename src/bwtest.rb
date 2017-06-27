@@ -9,6 +9,37 @@ class BWTest
       end
     end
 
+    def get_recording_customers(tn_list)
+      require_relative 'tn_search'
+      t = TnSearch.new
+
+      ent_groups = Hash.new(Array.new)
+      groups_counter = 0
+      tn_list = $bw_helper.get_array_from_file(tn_list)
+      tn_list.each do |tn|
+        tn_info = t.tn_search([tn])
+        ent = tn_info[tn][:serviceProviderId]
+        group = tn_info[tn][:groupId]
+        puts "#{ent},#{group}"
+
+        if ent_groups.has_key?(ent)        
+          if ent_groups[ent].include?(group)
+          else
+            ent_groups[ent].push(group)
+            groups_counter += 1
+          end
+        else
+          ent_groups[ent] = Array.new
+        end
+      end
+      
+      puts "=========================================="
+      puts "Total Enterprises: #{ent_groups.keys.length}"
+      puts "Total Groups: #{groups_counter}"
+
+
+    end
+
   	def get_svc_list
   		user = 'peteGRP-user002'
   		cmd_ok,response = $bw.get_user_svc_list(user)
