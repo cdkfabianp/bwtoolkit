@@ -3,9 +3,9 @@
 	"my_bw_user": "<bw system admin ID>",
 	"my_bw_pass": "<password>",
 	"debug": false,
-	"debug_oci": false,	
+	"debug_oci": false,
 	"ok_to_mod": false,
-    "confluence_url": "https://confluence_fqdn.com/rest/api/",
-    "confluence_user": "<confluence_user>",
-    "confluence_pass": "<confluence_pass>"
+	"confluence_url": "https://confluence_fqdn.com/rest/api/",
+	"confluence_user": "<confluence_user>",
+	"confluence_pass": "<confluence_pass>"
 }
