@@ -41,9 +41,12 @@ class BWTest
     end
 
   	def get_svc_list
-  		user = 'peteGRP-user002'
-  		cmd_ok,response = $bw.get_user_svc_list(user)
-  		puts response
+  		user = '7079352501'
+  		cmd_ok,response = $bw.get_user_svc_pack_list(user)
+      puts "My login level: #{$login_type}"
+      response.each do |sp|
+          puts sp if sp[:Assigned] == "true"
+      end
   	end
 
     def add_ucone_services
