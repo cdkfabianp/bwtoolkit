@@ -18,7 +18,7 @@ def bwtest
 	# t.print_group_list_of_ents($options[:user])
 	# t.get_user_by_ext($options[:user])
 	# t.audit_bwdevice_macs($options[:user])
-	t.get_recording_customers($options[:user])
+	t.get_svc_list
 end
 
 # Configure specified users in group for UCOne
@@ -121,6 +121,16 @@ def audit_service_pack
 		a.get_assigned_users(ent,group_list)
 	end
 end
+
+def audit_sp_to_device
+	require_relative 'src/audit_sp_to_device'
+	puts "my ent: #{$options[:ent]} and my group: #{$options[:group]}"
+	
+	a = AuditSPtoDeviceConfig.new($options[:ent],$options[:group])
+
+	a.audit_users_in_ent
+end
+
 
 def audit_messaging
 	require_relative 'src/auditMessaging'
@@ -280,22 +290,27 @@ $bw_helper = BWHelpers.new
 $bw = BWSystem.new
 $bw.bw_login(File.expand_path("../conf/bw_sys.conf",__FILE__))
 
-# Get Enterprise if not provided by User BUT group is specified
-if $options.has_key?(:group)
-	$options[:ent] = $bw.get_ent_by_group_id($options[:group]) unless $options.has_key?(:ent)
-	if $options[:ent] =~ /Could not find group:/
-		puts "Could not find group: #{$options[:group]} in system"
-		abort
-  end
-# Set group to nil if not provided
-elsif
-  $options.has_key?(:ent)
-  $options[:group] = nil
 
-# Set both ent and group to nil if neither provided
+if $login_type == "Service Provider"
 else
-	$options[:ent] = nil
-	$options[:group] = nil
+	# Get Enterprise if not provided by User BUT group is specified
+	if $options.has_key?(:group)
+		$options[:ent] = $bw.get_ent_by_group_id($options[:group]) unless $options.has_key?(:ent)
+		if $options[:ent] =~ /Could not find group:/
+			puts "Could not find group: #{$options[:group]} in system"
+			abort
+	  end
+	# Set group to nil if not provided
+	elsif
+	  $options.has_key?(:ent)
+	  $options[:group] = nil
+
+	# Set both ent and group to nil if neither provided
+	else
+		$options[:ent] = nil
+		$options[:group] = nil
+	end
+
 end
 
 # Send to specific method to process command
