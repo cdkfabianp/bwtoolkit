@@ -22,6 +22,7 @@ class BWControl < BWOci
             debug_time = c[:debug_time]
         end
 
+        $login_type = nil
         @debug_verbose = debug_oci
         @tcp_client = openTcpSocket(server)
         @debug_time = debug_time
@@ -310,6 +311,11 @@ class BWControl < BWOci
         puts "Error creating encrypted password" unless digest.length == 32
 
         response,cmd_ok = send_request(:LoginRequest14sp4,{userId: user,signedPassword: digest})
+
+        # Parse out login user service level
+        parse_response = REXML::Document.new(response)
+        $login_type = parse_response.elements["//command/loginType"].text
+
         is_logged_in = true if cmd_ok == true
 
         return is_logged_in
