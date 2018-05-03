@@ -60,6 +60,17 @@ class BWUser < BWControl
         return cmd_ok,response_hash
     end
 
+    def get_user_dnd_status(user)
+        oci_cmd = :UserDoNotDisturbGetRequest
+        config_hash = send(oci_cmd,user)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash,cmd_ok = get_rows_response(oci_cmd,config_hash)
+        puts "#{__method__}: response:\n#{response_hash}\n"
+
+        return response_hash[:isActive]
+    end
+
     def get_user_filtered_info(user,filter=nil)
     	oci_call = :UserGetRequest20
         response_hash,cmd_ok = get_nested_rows_response(oci_call,{userId: user})
@@ -289,6 +300,16 @@ class BWUser < BWControl
 	 	response,cmd_ok = send_request(oci_cmd,config_hash)
 
 	 	return cmd_ok,response
+    end
+
+    def mod_user_dnd_status(user=nil,set_dnd)
+        oci_cmd = :UserDoNotDisturbModifyRequest
+        config_hash = send(oci_cmd,user,set_dnd)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
     end
 
     def mod_user_enable_xmpp(user=nil,is_active=nil)
