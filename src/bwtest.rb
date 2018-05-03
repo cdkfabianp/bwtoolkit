@@ -1,5 +1,9 @@
 class BWTest
 
+    def test_dnd
+      $bw.get_user_dnd_status("4803857059")
+    end
+
     def print_group_list_of_ents(ent_list)
       ents = $bw_helper.get_array_from_file(ent_list)
       ents.each do |ent|
