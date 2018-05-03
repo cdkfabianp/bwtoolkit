@@ -487,6 +487,19 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def UserDoNotDisturbGetRequest(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
+	def UserDoNotDisturbModifyRequest(user=nil,set_dnd=nil)
+		config_hash = {
+			userId: user,
+			isActive: set_dnd,
+		}
+	end
+
 	def UserGetListInGroupRequest(ent=nil,group=nil,search_criteria=nil,value=nil,mode='Equal To',isCaseInsensitive=nil)
 		config_hash = {
 			serviceProviderId: ent,
