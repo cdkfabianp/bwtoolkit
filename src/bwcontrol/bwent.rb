@@ -34,6 +34,17 @@ class BWEnt < BWGroup
         return cmd_ok,ents
     end
 
+    def get_ents_by_name(value,mode)
+        oci_cmd = :ServiceProviderGetListRequest
+        ents = Array.new
+        config_hash = send(oci_cmd,:searchCriteriaServiceProviderId,value,mode)
+
+        table_header = "serviceProviderTable"
+        table_of_ents,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        table_of_ents.each { |ent_hash| ents << ent_hash[:Service_Provider_Id] }        
+    end
+
+
     def get_ent_admin_list(ent=nil)
         oci_cmd = :ServiceProviderAdminGetListRequest14
         config_hash = send(oci_cmd,ent)

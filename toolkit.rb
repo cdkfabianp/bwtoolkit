@@ -19,7 +19,7 @@ def bwtest
 	# t.get_user_by_ext($options[:user])
 	# t.audit_bwdevice_macs($options[:user])
 	# t.get_svc_list
-	puts $bw.mod_user_dnd_status("4803857059",false)
+	puts t.find_ent_by_name
 end
 
 # Configure specified users in group for UCOne

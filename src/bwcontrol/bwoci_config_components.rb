@@ -67,7 +67,7 @@ class OCIComponents
 
 	def searchCriteriaServiceProviderId(value=nil,mode='Equal To',isCaseInsensitive=nil)
 		config_hash = {
-			mode: "Equal To",
+			mode: mode,
 			value: value,
 			isCaseInsensitive: true
 		}

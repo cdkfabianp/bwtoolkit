@@ -4,6 +4,10 @@ class BWTest
       $bw.get_user_dnd_status("4803857059")
     end
 
+    def find_ent_by_name
+      puts $bw.get_ents_by_name("Massage Envy",'Contains')
+    end
+
     def print_group_list_of_ents(ent_list)
       ents = $bw_helper.get_array_from_file(ent_list)
       ents.each do |ent|
