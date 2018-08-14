@@ -36,6 +36,22 @@ class BWGroup < BWUser
         return cmd_ok,groups
     end
 
+    def get_groups_by_name(value=nil,mode=nil,case_insensitive=true)
+        oci_cmd = :GroupGetListInSystemRequest
+        config_hash = send(oci_cmd,value,mode,case_insensitive)
+        # abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if 
+        
+        groups = Array.new
+        table_header = "groupTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+        if response_hash.is_a?(Array)
+            response_hash.each { |group_hash| groups << group_hash[:Group_Id] }
+        end
+
+        return cmd_ok,groups
+
+    end
+
     def get_group_admin_list(ele=nil)
         oci_cmd = :GroupAdminGetListRequest
         config_hash = send(oci_cmd,ele[:ent],ele[:group])
@@ -100,6 +116,29 @@ class BWGroup < BWUser
             service_assigned = true if svc_info[:Service_Name] == service && svc_info[:Authorized] == "true"
         end
         return service_assigned
+    end
+
+    def get_group_cc_list(ent=nil,group=nil)
+        oci_cmd = :GroupCallCenterGetInstanceListRequest
+        config_hash = send(oci_cmd,ent,group)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = "callCenterTable"
+
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def get_group_cc_agents(svc_id)
+        oci_cmd = :GroupCallCenterGetAgentListRequest
+        config_hash = send(oci_cmd,svc_id)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if svc_id == nil    
+
+        table_header = "agentTable"
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)   
+
+        return cmd_ok,response_hash 
     end
 
     # Return Default Domain for Group
