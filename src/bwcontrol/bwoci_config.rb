@@ -82,6 +82,19 @@ class BWOci < OCIComponents
 			}
     end
 
+    def GroupCallCenterGetAgentListRequest(svc_id=nil)
+    	config_hash = {
+    		serviceUserId: svc_id
+    	}
+    end
+
+    def GroupCallCenterGetInstanceListRequest(ent=nil,group=nil)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group
+    	}    	
+    end
+
     def GroupCallProcessingGetPolicyRequest17sp4
     	config_hash = {
 			serviceProviderId: nil,
@@ -204,13 +217,13 @@ class BWOci < OCIComponents
 		return config_hash
 	end
 
-	def GroupGetListInSystemRequest
+	def GroupGetListInSystemRequest(value=nil,mode='Equal To',case_insensitive=true)
 		config_hash = {
 			responseSizeLimit: 1000,
-			searchCriteriaGroupId: {
-				mode: "Equal To",
-				value: nil,
-				isCaseInsensitive: true
+			searchCriteriaGroupName: {
+				mode: mode,
+				value: value,
+				isCaseInsensitive: case_insensitive
 			},
 		}
 	end
