@@ -19,7 +19,7 @@ def bwtest
 	# t.get_user_by_ext($options[:user])
 	# t.audit_bwdevice_macs($options[:user])
 	# t.get_svc_list
-	puts t.find_ent_by_name
+	puts t.find_groups_by_name
 end
 
 # Configure specified users in group for UCOne
@@ -55,6 +55,17 @@ def find_tn
 		tn_list.push($options[:tn])
 	end
 	t.print_info(tn_list)
+end
+
+def get_cc_info
+	require_relative 'src/getCallCenterInfo'
+
+	ent = $options[:ent]
+	group = $options[:group]
+	puts "my ent: #{ent} my group: #{group}"
+	cc = CallCenterInfo.new(ent,group)
+	cc.get_cc_assigned_agents
+
 end
 
 # Find all active devices in group based on active registrations and configured users
@@ -292,7 +303,8 @@ $bw = BWSystem.new
 $bw.bw_login(File.expand_path("../conf/bw_sys.conf",__FILE__))
 
 
-if $login_type == "Service Provider"
+if $login_type == "Service Provider" || $login_type == "Group"
+	puts "logged in as SP"
 else
 	# Get Enterprise if not provided by User BUT group is specified
 	if $options.has_key?(:group)
