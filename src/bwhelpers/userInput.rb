@@ -36,6 +36,7 @@ class UserInput
                 audio_repo:                     Find all active audio files in Announcement Repository
                 audit_service_pack:             Find all active users assigned to a specific service pack
                 audit_sp_to_device:             Get List of Users and their Identity / Device Profile Type and Registration Info                
+                get_cc_info:                    Get CallCenter Info
                 get_communicator_info:          Get User-Agent Info about UC-One Devices
                 get_ent_info:                   Get Info About Ents and their Groups
                 get_group_to_product_mapping:   Attempt to determine what product type the group is (Hosted, CallConnect, CTC, Small Business, etc)
@@ -124,6 +125,13 @@ class UserInput
         return opts,options
     end
 
+    def get_cc_info(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s}"
+        opts.on("-g", "--group GROUP", "[groupID|ALL] Specify single Group within enterprise, use \"ALL\" to query all groups in system") {|v| options[:group] = v}              
+        opts.on("-e", "--ent ENT", "Enterprise to query in the system") {|v| options[:ent] = v}               
+        return opts,options
+    end
+    
     def get_ent_info(opts,options)
         opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP|-a ALL] [options]"
         opts.on("-x", "--cmd CMD", "Audit command to run to query user") {|v| options[:sub_cmd] = v}
