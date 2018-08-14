@@ -59,6 +59,14 @@ class OCIComponents
 		}		
 	end
 
+	def searchCriteriaGroupName(value=nil,mode='Equal To',is_case_insensitive=true)
+		config_hash = {
+			mode: mode,
+			value: value,
+			isCaseInsensitive: is_case_insensitive
+		}		
+	end
+
 	def SearchCriteriaExactServiceType(type=nil)
 		config_hash = {
 			serviceType: type
