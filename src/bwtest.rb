@@ -4,8 +4,10 @@ class BWTest
       $bw.get_user_dnd_status("4803857059")
     end
 
-    def find_ent_by_name
-      puts $bw.get_ents_by_name("Massage Envy",'Contains')
+    def find_groups_by_name
+      cmd_ok,groups = $bw.get_groups_by_name("Massage Envy",'Contains')
+      puts "Found Groups:\n#{groups}"
+      puts "Found Total Groups: #{groups.length}"
     end
 
     def print_group_list_of_ents(ent_list)
