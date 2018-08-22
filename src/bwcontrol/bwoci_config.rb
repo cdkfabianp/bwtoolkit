@@ -465,6 +465,20 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def UserCallForwardingBusyGetRequest(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
+	def UserCallForwardingBusyModifyRequest(user=nil,is_active=nil,fwd_to=nil)
+		config_hash = {
+			userId: user,
+			isActive: is_active,
+			forwardToPhoneNumber: fwd_to
+		}
+	end
+
 	def UserCallProcessingModifyPolicyRequest14sp7
 		config_hash = {
 			userId: nil,
@@ -498,6 +512,20 @@ class BWOci < OCIComponents
 			allowConfigurableCLIDForRedirectingIdentity: nil,
 			allowDepartmentCLIDNameOverride: nil,
 		}
+	end
+
+	def UserCallWaitingGetRequest17sp4(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+
+	def UserCallWaitingModifyRequest(user=nil,is_active)
+		config_hash = {
+			userId: user,
+			isActive: is_active
+		}
+
 	end
 
 	def UserDoNotDisturbGetRequest(user=nil)

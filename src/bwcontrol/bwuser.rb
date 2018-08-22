@@ -50,6 +50,26 @@ class BWUser < BWControl
         return cmd_ok, user_ids
     end
 
+    def get_user_cfb_settings(user=nil)
+        oci_cmd = :UserCallForwardingBusyGetRequest
+        config_hash = send(oci_cmd)
+        config_hash[:userId] = user
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash, cmd_ok = get_rows_response(oci_cmd,config_hash)
+        return cmd_ok,response_hash
+    end
+
+    def get_user_cw_setting(user=nil)
+        oci_cmd = :UserCallWaitingGetRequest17sp4
+        config_hash = send(oci_cmd)
+        config_hash[:userId] = user
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash, cmd_ok = get_rows_response(oci_cmd,config_hash)
+        return cmd_ok,response_hash
+    end
+
     def get_user_device_info(ent=nil,group=nil,dev_name=nil)
         oci_cmd = :GroupAccessDeviceGetRequest18sp1
         config_hash = send(oci_cmd,ent,group,dev_name)
@@ -271,6 +291,15 @@ class BWUser < BWControl
     	# return final_cmd_ok,final_response
     end
 
+    def mod_user_cfb(user,is_active,fwd_to)
+        oci_cmd = :UserCallForwardingBusyModifyRequest
+        config_hash = send(oci_cmd,user,is_active,fwd_to)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+        return cmd_ok,response        
+    end
+
     def mod_user_config(config_hash,user_mod_hash)
       config_hash.keep_if do |k|
         is_true = false
@@ -300,6 +329,15 @@ class BWUser < BWControl
 	 	response,cmd_ok = send_request(oci_cmd,config_hash)
 
 	 	return cmd_ok,response
+    end
+
+    def mod_user_cw(user,is_active)
+        oci_cmd = :UserCallWaitingModifyRequest
+        config_hash = send(oci_cmd,user,is_active)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+        return cmd_ok,response
     end
 
     def mod_user_dnd_status(user=nil,set_dnd)

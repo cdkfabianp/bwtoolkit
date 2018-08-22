@@ -35,6 +35,7 @@ class UserInput
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
                 audit_service_pack:             Find all active users assigned to a specific service pack
+                audit_site:                     Audit site for CFB and Call Waiting settings on each user
                 audit_sp_to_device:             Get List of Users and their Identity / Device Profile Type and Registration Info                
                 get_cc_info:                    Get CallCenter Info
                 get_communicator_info:          Get User-Agent Info about UC-One Devices
@@ -86,6 +87,12 @@ class UserInput
         opts.on("-t", "--type USER_TYPE", "Specify User type: Hosted_User,Virtual_User,Trunk_User") { |v| options[:user_type] = v }
         opts.on("-s", "--sp SVC_PACK", "Specify service pack to query, examples: vupp1, standard") { |v| options[:sp] = v }        
         return opts,options        
+    end
+
+    def audit_site(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-e", "--ent ENTERPRISE", "Specify single Enterprsie,") { |v| options[:ent] = v }        
+        return opts,options  
     end
 
     def audit_sp_to_device(opts,options)

@@ -188,6 +188,14 @@ def audit_rec
 
 end
 
+def audit_site
+	require_relative 'src/auditSite'
+
+	r = AuditSite.new($options[:ent])
+	r.audit_site
+
+end
+
 def get_ent_info
 	require_relative 'src/getEntProfile'
 	$admin_list = Hash.new(Hash.new)
