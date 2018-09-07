@@ -90,5 +90,35 @@ class ModifyUser
 		end
 	end
 
+	def update_name(file_name)	
+		if File.exist?(file_name)
+			user_list = $bw_helper.get_users_from_file(file_name,0)
+
+			puts "userId,lastName,FirstName,New FirstName"
+			user_list.each do |user|
+				cmd_ok,u = $bw.get_user_filtered_info(user)
+				if u[:firstName] =~ /(\w)\w+/i
+					# Modes for lastname
+					mods = {
+						userId: user,
+						lastName: "AllCall_#{u[:lastName]}",
+						callingLineIdLastName: "AllCall_#{u[:lastName]}",
+						hiraganaLastName: "AllCall_#{u[:lastName]}"
+					}
+
+					#Mods for firstName
+					mods = {
+						userId: user,
+						firsrtName: $1,
+						callingLineIdFirstName: $1,
+						hiraganaFirstName: $1
+					}
+					cmd_ok,results = $bw.mod_user_profile(mods)
+					puts "#{user},#{u[:lastName]},#{u[:firstName]},#{$1}"
+				end
+			end
+		end
+	end
+
 
 end

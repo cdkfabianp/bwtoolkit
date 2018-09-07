@@ -54,6 +54,18 @@ class GetProfileInfo
 		return user_list
 	end
 
+	def get_user_vm_settings
+		ent = $options[:ent]
+		cmd_ok,groups = $bw.get_groups(ent)
+		groups.each do |group|
+			cmd_ok,users = $bw.get_users_in_group(ent,group)
+			users.each do |user|
+				vm_is_on,vm_is_configured = $bw.get_user_vm_in_use(user)
+				puts "RESULT,#{ent},#{group},#{user},#{vm_is_on}"
+			end
+		end
+	end
+
 	def print_users_in_group
 		group = $options[:group]
 		ent = $options[:ent]

@@ -211,6 +211,7 @@ class UserInput
         opts.on("-q", "--query QUERY", "Query Fields to Return") {|v| options[:query] = v}
         opts.on("-x", "--cmd CMD", "Audit command to run to query user") {|v| options[:sub_cmd] = v}
         opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-e", "--ent ENT", "Specify single Enterprise)") { |v| options[:ent] = v}
         opts.on("-a", "--all ALL_GROUPs", "Specify All Groups") { |v| options[:all_groups] = true}
         opts.on("-u", "--user_filter USER", "Specify part or all of userId to filter on") { |v| options[:filter_user] = v }
         return opts,options        
