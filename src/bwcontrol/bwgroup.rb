@@ -141,6 +141,35 @@ class BWGroup < BWUser
         return cmd_ok,response_hash 
     end
 
+    def add_group_custom_tag_for_device(ent=nil,group=nil,dev_type=nil,tag_name=nil,tag_value=nil)
+        oci_cmd = :GroupDeviceTypeCustomTagAddRequest
+        config_hash = send(oci_cmd,ent,group,dev_type,tag_name,tag_value)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+    end
+
+    def get_group_custom_tags_for_device(ent=nil,group=nil,dev_name=nil)
+        oci_cmd = :GroupDeviceTypeCustomTagGetListRequest
+        config_hash = send(oci_cmd,ent,group,dev_name)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        table_header = 'groupDeviceTypeCustomTagsTable'
+        response_hash,cmd_ok = get_table_response(oci_cmd,table_header,config_hash)
+
+        return cmd_ok,response_hash
+    end
+
+    def delete_group_custom_tag_for_device(ent=nil,group=nil,dev_type=nil,tag_name=nil)
+        oci_cmd = :GroupDeviceTypeCustomTagDeleteListRequest
+        config_hash = send(oci_cmd,ent,group,dev_type,tag_name)
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if ent == nil
+
+        response,cmd_ok = send_request(oci_cmd,config_hash)
+
+        return cmd_ok,response
+    end
+
     # Return Default Domain for Group
     def get_group_default_domain(ent=nil,group=nil)
         oci_cmd = :GroupDomainGetAssignedListRequest

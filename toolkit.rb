@@ -123,6 +123,11 @@ def tn_port_out
 
 end
 
+def audit_custom_tags_by_device
+	require_relative 'src/modifyCustomTagsByDeviceType'
+	a = ModifyCustomTagsByDeviceType.new
+	a.get_tags_by_device_type($options[:ent])
+end
 
 def audit_service_pack
 	require_relative 'src/auditLicensePack'

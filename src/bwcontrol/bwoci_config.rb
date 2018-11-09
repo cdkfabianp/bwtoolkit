@@ -21,6 +21,14 @@ class BWOci < OCIComponents
         }
     end
 
+    def GroupAccessDeviceCustomTagGetListRequest(ent,group,dev_name)
+    	config_hash = {
+    		serviceProviderId: ent,
+    		groupId: group,
+    		deviceName: dev_name
+    	}
+    end
+
     def GroupAnnouncementFileGetListRequest
 		config_hash = {
 			serviceProviderId: nil,
@@ -186,6 +194,34 @@ class BWOci < OCIComponents
 #    NEED TO FILL IN MISSING OCI COMMANDS
 #
 #
+
+	def GroupDeviceTypeCustomTagAddRequest(ent,group,dev_type,tag_name,tag_value)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			deviceType: dev_type,
+			tagName: tag_name,
+			tagValue: tag_value
+		}
+	end
+
+	def GroupDeviceTypeCustomTagDeleteListRequest(ent,group,dev_type,tag_name)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			deviceType: dev_type,
+			tagName: tag_name,			
+		}
+	end
+
+	def GroupDeviceTypeCustomTagGetListRequest(ent,group,dev_type)
+		config_hash = {
+			serviceProviderId: ent,
+			groupId: group,
+			deviceType: dev_type
+		}		
+	end
+
 	def GroupDnUnassignListRequest(ent=nil,group=nil,tn_list=nil)
 		config_hash = {
 			serviceProviderId: ent,

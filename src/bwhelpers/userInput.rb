@@ -31,6 +31,7 @@ class UserInput
                 tn_port_out:                    Remove ported-out numbers from Broadworks
                 reg_stats:                      Find all active devices in group based on registrations status and users assigend to device
                 config_ucone:                   Configure specified users for UCOne
+                audit_custom_tags_by_device:    Audit and Add Custom tags by device type
                 audit_messaging:                Find all users assigned messaging and whether the service can be removed
                 audit_rec:                      Find all users assigned receptionist users and whether they are monitoring any users
                 audio_repo:                     Find all active audio files in Announcement Repository
@@ -49,6 +50,13 @@ class UserInput
                 validate_ent:                   Validate that specified Enterprise is valid in the system (likelness that is is in use)
         "
         abort
+    end
+
+    def audit_custom_tags_by_device(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP]"
+        opts.on("-g", "--group GROUP", "Specify single Group, use -a if you want all groups") { |v| options[:group] = v}
+        opts.on("-e", "--ent ENTERPRISE", "Specify single Enterprsie,") { |v| options[:ent] = v }        
+        return opts,options          
     end
 
     def audit_messaging(opts,options)
