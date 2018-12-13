@@ -291,6 +291,12 @@ def update_trunk_cap
 	end
 end
 
+def update_aa_hours
+	require_relative 'src/modifyAAHours'
+	u = ModifyAAHours.new
+	u.mod_aa_config($options[:ent])
+end
+
 def validate_ent
 	require_relative 'src/validateEnterprise'
 	e = ValidateEnterprise.new

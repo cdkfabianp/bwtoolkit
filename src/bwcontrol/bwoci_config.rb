@@ -654,7 +654,6 @@ class BWOci < OCIComponents
 			emailAddress: nil,
 			yahooId: nil,
 			addressLocation: nil,
-			addressLocation: nil,
 			networkClassOfService: nil,
 			officeZoneName: nil,
 			primaryZoneName: nil,

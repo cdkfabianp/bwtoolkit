@@ -48,6 +48,7 @@ class UserInput
                 update_trunk_cap:               Update Trunk capacity for all trunk groups and groups under specific enterprise
                 mod_user_config:                Modify basic user configuration
                 validate_ent:                   Validate that specified Enterprise is valid in the system (likelness that is is in use)
+                update_aa_hours:                Update Auto Attendant After Hours
         "
         abort
     end
@@ -249,5 +250,10 @@ class UserInput
         return opts,options
     end
 
+    def update_aa_hours(opts,options)
+        opts.banner = "Usage: #{$PROGRAM_NAME} #{options[:cmd].to_s} [-g GROUP|-a ALL] [options]"
+        opts.on("-e", "--ent ENTERPRISE", "[optional] Specify single Ent, use -a if you want all enterprises") { |v| options[:ent] = v}
+        return opts,options
+    end
 
 end

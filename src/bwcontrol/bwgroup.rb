@@ -379,7 +379,7 @@ class BWGroup < BWUser
         config_template = send(oci_cmd)
         config_hash = $bw_helper.mod_config_hash(config_template,svc_mod_hash)
 
-        # config_hash[:serviceInstanceProfile][:phoneNumber] = {attr: {'xsi:nil' => "true"}}
+        config_hash[:businessHours] = {attr: {'xsi:nil' => "true"}}
         response,cmd_ok = send_request(oci_cmd,config_hash,ok_to_send)
 
         return cmd_ok,response
