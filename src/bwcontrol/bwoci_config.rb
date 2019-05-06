@@ -515,6 +515,12 @@ class BWOci < OCIComponents
 		}
 	end
 
+	def UserCallProcessingGetPolicyRequest19sp1(user=nil)
+		config_hash = {
+			userId: user
+		}
+	end
+	
 	def UserCallProcessingModifyPolicyRequest14sp7
 		config_hash = {
 			userId: nil,

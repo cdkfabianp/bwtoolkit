@@ -9,6 +9,52 @@ class GetProfileInfo
 
 	end
 
+	def get_large_user_list(ent,group)
+		user_list = Array.new
+		search_criteria = :searchCriteriaUserId
+		prefix = Array (0..9)
+		prefix.each do |d|
+			value = "euro23#{d}"
+			puts "Checking #{value}"
+			cmd_ok,response_hash_ext = $bw.get_users_in_group(ent,group,search_criteria,value,mode='Starts With')
+			puts "Checking #{d}"
+			cmd_ok,response_hash_did = $bw.get_users_in_group(ent,group,search_criteria,d,mode='Starts With')	
+			user_list.push(*response_hash_did)
+			user_list.push(*response_hash_ext)
+			puts "Updated User Count: #{user_list.length}"
+		end
+
+		puts "Total Users Found: #{user_list.length} AND list of users:\nSTART\n"
+
+		return user_list
+	end
+
+	def get_profile_data
+		group = $options[:group]
+		ent = $options[:ent]
+
+		# user_list = get_large_user_list(ent,group)
+		cmd_ok,user_list = $bw.get_users_in_group(ent,group)
+		puts "USERID|PHONE_NUMBER|EXTENSION|CLID_NUMBER|DID_MATCHES_EXT|USING_USER_CLID"
+		user_list.each do |user|
+			cmd_ok,data = $bw.get_user_filtered_info(user)
+
+			phone_number = data[:phoneNumber]
+			extension = data[:extension]
+			clid_number = data[:callingLineIdPhoneNumber]
+
+			# Make sure last 4 of DID match extension
+			did_matches_extension = "NA"		
+			did_matches_extension = phone_number.to_s.chars.last(4).join == extension.to_s if phone_number && extension
+
+			# Get CLID settings
+			is_using_user_clid = $bw.is_using_user_call_proc?(user)
+
+			puts "#{user}|#{phone_number}|#{extension}|#{clid_number}|#{did_matches_extension}|#{is_using_user_clid}"
+		end
+
+	end
+
 	def get_profile_info
 		file_name = $options[:file]
 		field_num = $options[:field_num]
@@ -70,7 +116,7 @@ class GetProfileInfo
 		group = $options[:group]
 		ent = $options[:ent]
 
-		puts $bw.get_users_in_group(ent,group)
+		return $bw.get_user_filtered_info(ent,group)
 	end
 
 	def print_long_user_ids

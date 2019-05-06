@@ -50,6 +50,25 @@ class BWUser < BWControl
         return cmd_ok, user_ids
     end
 
+    def get_user_call_proc_settings(user=nil)
+        oci_cmd = :UserCallProcessingGetPolicyRequest19sp1
+        config_hash = send(oci_cmd)
+        config_hash[:userId] = user
+        abort "#{__method__} for #{oci_cmd} Default Options: #{config_hash}" if user == nil
+
+        response_hash, cmd_ok = get_rows_response(oci_cmd,config_hash)
+        return cmd_ok,response_hash
+    end
+
+    def is_using_user_call_proc?(user)
+        cmd_ok,response_hash = get_user_call_proc_settings(user)
+
+        result = false
+        result = true if response_hash[:useUserCLIDSetting] == "true"
+
+        return result
+    end
+
     def get_user_cfb_settings(user=nil)
         oci_cmd = :UserCallForwardingBusyGetRequest
         config_hash = send(oci_cmd)
