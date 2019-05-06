@@ -43,11 +43,11 @@ class OCIComponents
 		}
 	end
 
-	def searchCriteriaUserId(value=nil)
+	def searchCriteriaUserId(value,mode,isCaseInsensitive)
 		config_hash = {
-			mode: "Starts With",
+			mode: mode,
 			value: value,
-			isCaseInsensitive: true
+			isCaseInsensitive: isCaseInsensitive
 		}
 	end
 
