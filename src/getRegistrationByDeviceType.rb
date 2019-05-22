@@ -2,9 +2,17 @@ class GetRegByDeviceType
 
 	def initialize(all_poly,counts_only,ent=nil,group=nil)
 		@ent_groups = nil
-		ent == nil ? @ent_groups = $bw.get_groups_in_system : @ent_groups = {ent => [group]}
+		if ent == nil
+			@ent_groups = $bw.get_groups_in_system
+		elsif ent && group == nil
+			cmd_ok, groups = $bw.get_groups(ent)
+			@ent_groups = {ent => groups}
+		else
+			@ent_groups = {ent => [group]}
+		end
 		@device_search_list = ['Polycom Soundpoint IP 500', 'Polycom Soundpoint IP 601'] 
 		@device_search_list = $bw.get_sys_poly_device_types if all_poly == true
+		@device_search_list = ['Grandstream HT-818', 'Grandstream GXW4008']
 		puts "Searching System for Registrations on the following devices:\n #{@device_search_list}\n---------------------------------------\n"
 		@counts = false
 		@counts = counts_only if counts_only == "true"
@@ -95,14 +103,20 @@ class GetRegByDeviceType
 	end
 
 	def parse_ua(ua)
-		dev_type = "UNKNOWN DEVICE USER_AGENT (#{ua})"
+		dev_type = "#{ua}"
 		dev_ver = "unknown"
 		dev_mac = "unknown"
-		/(Polycom[VS].+)-UA\/([\.\d]+)/.match(ua)
-			dev_type = $1
-			dev_ver = $2
-		/_(\w{12})$/.match(ua)		
-			dev_mac = $3
+
+		if @device_search_list.include?('Grandstream HT-818')
+			/Grandstream\sHT818\s(.*)$/.match(ua)
+				dev_ver = $1
+		else			
+			/(Polycom[VS].+)-UA\/([\.\d]+)/.match(ua)
+				dev_type = $1
+				dev_ver = $2
+			/_(\w{12})$/.match(ua)		
+				dev_mac = $3
+		end
 		return dev_type,dev_ver,dev_mac
 	end	
 

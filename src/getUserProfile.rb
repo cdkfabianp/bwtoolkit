@@ -33,8 +33,8 @@ class GetProfileInfo
 		group = $options[:group]
 		ent = $options[:ent]
 
-		# user_list = get_large_user_list(ent,group)
-		cmd_ok,user_list = $bw.get_users_in_group(ent,group)
+		user_list = get_large_user_list(ent,group)
+		# cmd_ok,user_list = $bw.get_users_in_group(ent,group)
 		puts "USERID|PHONE_NUMBER|EXTENSION|CLID_NUMBER|DID_MATCHES_EXT|USING_USER_CLID"
 		user_list.each do |user|
 			cmd_ok,data = $bw.get_user_filtered_info(user)
@@ -45,7 +45,7 @@ class GetProfileInfo
 
 			# Make sure last 4 of DID match extension
 			did_matches_extension = "NA"		
-			did_matches_extension = phone_number.to_s.chars.last(4).join == extension.to_s if phone_number && extension
+			did_matches_extension = "23#{phone_number.to_s.chars.last(4).join}" == extension.to_s if phone_number && extension
 
 			# Get CLID settings
 			is_using_user_clid = $bw.is_using_user_call_proc?(user)
